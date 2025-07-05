@@ -1,0 +1,184 @@
+"  customize .vimrc for vim (https://www.vim.org/)
+
+"----------------------- General settings ---------------------------------
+
+syntax on
+filetype on                       "required
+set nocompatible                  "be iMproved, required
+set showmatch                     "Convenient for showing the matching braces"
+set hidden                        "Allows for file buffers
+set wildmenu                      "Creates a wild menu for toggling between files
+set colorcolumn=80                "Create a clear 80 char limit for coding"
+set nu                            "Hide/Display line numbers"
+set clipboard=unnamed
+"set relativenumber              "Hide/Show line numbers and relative value
+                                  "  for easy navigation"
+set smartcase                     "Helps with searching text set noswapfile
+set history=10000                 "Creates a history of vim commands to search
+set undodir=~/.vim/undodir        "Stores undohistory in undodirectory for
+                                  "  edited files for future sessions"
+set undofile                      "Turns on saving of undo/redo history"
+set viminfo='20,<1000,s1000       "Prevents truncating yanks, deletes
+set noerrorbells                  "Turn off sound when errors made"
+set belloff=all
+set textwidth=80                  "Set default settings for tabs, width, indent"
+set tabstop=2                     "All tabbing set to 2
+set softtabstop=2
+set shiftwidth=2
+set ruler
+set wrapscan
+set path=$PWD/**                  "Enable fuzzy finding in the vim command line
+set noswapfile
+set nowritebackup
+set ttyfast
+set mouse=a                       "Allows for mouse scrolling
+set re=0                          "Fixes slow TS highlighting
+
+"Ignore looking in these locations for fuzzy finder
+
+set wildignore+=**/.git/**,**/__pycache__/**,**/venv/**,**/
+      \node_modules/**,**/dist/**,**/build/**,*.o,*.pyc,*.swp
+
+"{{ External Files }}
+
+source ~/.vim/vimabbrs.vim       "Abbreviations loaded from external file
+source ~/.vim/vim-functions.vim       "Abbreviations loaded from external file
+
+"------------------------- Plug-in configurations --------------------------
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+"{{Plugins installed into Plugged folder}}
+call plug#begin('~/.vim/plugged')
+
+"{{The Basics}}
+Plug 'dense-analysis/ale'
+
+"{{Productivity}}
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+"{{Syntax Highlighting and Colors}}
+Plug 'morhetz/gruvbox'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+"{{Language specific plugins
+Plug 'sheerun/vim-polyglot'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+"{{ Not currently used
+
+"Plug 'StanAngeloff/php.vim'
+"Plug 'arnaud-lb/vim-php-namespace'
+"Plug 'HerringtonDarkholme/yats.vim'  # Typescript support
+"Plug 'plasticboy/vim-markdown'
+"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+"Plug 'tpope/vim-surround'
+"Plug 'jiangmiao/auto-pairs'
+"Plug 'vim-pandoc/vim-pandoc'
+"Plug 'vim-pandoc/vim-pandoc-syntax'
+"Plug 'tpope/vim-fugitive'
+Plug 'mattn/emmet-vim'
+"Plug 'evanleck/vim-svelte'
+"Plug 'pangloss/vim-javascript'
+"Plug 'HerringtonDarkholme/yats.vim'
+
+call plug#end()
+
+if has('termguicolors')
+  set termguicolors
+endif
+
+highlight Terminal guibg='#282828' guifg='#ebdbb2'
+
+"{{For dark version}}
+set term=xterm
+
+" initalizes Gruvbox by default
+call Gruvbox()
+
+let mapleader = " "
+:imap ii <Esc>
+
+"{{ Fuzzy finder }}
+
+let g:fzf_layout = { 'window': { 'width': 0.5, 'height': 0.3 } }
+let g:fzf_action = { 'enter': 'tab split' }
+let $FZF_DEFAULT_OPTS='--reverse'
+
+"Remove node_modules from fzf (not in git repo like below)
+let $FZF_DEFAULT_COMMAND='find . \( -name node_modules -o -name .git \) -prune -o -print'
+
+"{{ File type specific config (i.e. markdown, yaml }}
+nnoremap <leader>md :MarkdownPreview<CR>
+autocmd Filetype markdown let b:autopairs_enabled = 0
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType json syntax match Comment +\/\/.\+$+
+autocmd FileType json syntax match Comment "//.*"
+au FileType markdown setlocal foldlevel=99
+
+let g:vim_markdown_folding_disabled = 1
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+let g:mkdp_markdown_css = '~/.vim/github-markdown.css'
+let g:go_fmt_command = "gofmt"
+let g:ale_sign_error = '@'
+let g:ale_sign_warning = '*'
+
+" File specific / skeleton files when a new file with name created. 
+au BufNewFile README.md 0r $STARTANEW/snippets/skele/readme.md
+au BufNewFile *.java 0r $STARTANEW/snippets/skele/Main.java
+
+augroup markdown_skeleton
+   autocmd!
+   autocmd BufNewFile *.md execute '0r ' . expand('$STARTANEW/snippets/skele/markdown.md')
+augroup END
+
+au BufRead,BufNewFile *.md setlocal textwidth=80
+
+"{{Personal Quick Actions}}
+nnoremap <leader>so :so %<CR>
+nnoremap <leader>vim :e ~/.vim/vimrc<CR>
+nnoremap <leader>not :e $STARTANEW/software/vim.md<CR>
+nnoremap <leader>bp :bp<CR>
+nnoremap <leader>bn :bn<CR>
+nnoremap <leader>gf :GFiles<CR>
+nnoremap <leader>gg :Files<CR>
+nnoremap <leader>xx :-1read $STARTANEW/snippets/
+nnoremap <leader>abbr :e ~/.vim/vimabbrs.vim<CR>
+nnoremap <leader>gp :.!gp<CR>
+nnoremap <leader>gp :.!gpmac<CR>
+nnoremap <leader>mm :.!mdurl
+nnoremap <leader>o :on
+nnoremap <leader>tt :term
+nnoremap <Leader>b :ls<CR>:b<Space>
+nnoremap <Leader>put :.!yyy<CR>
+nnoremap <Leader>get :r $STARTANEW/saved/buf<CR>
+nnoremap <Leader>ff vipgq
+nnoremap q: <nop>
+
+
+nnoremap <Leader>out System.out.println(
+" Markdown specific
+map <leader>code i```<CR><CR>```
+
+"{{Git melated commands}}
+nmap <leader>gs :G<CR>
+nmap <leader>gc :GCheckout<CR>
+nmap <leader>gu :diffget //2<CR>
+nmap <leader>gh :diffget //3<CR>
+
+"{{Split Navigation}}
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+"Disable caps lock after leaving insert mode }}
+
+au InsertLeave * call TurnOffCaps()
+

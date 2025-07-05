@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='/home/mskramst/repos/github.com/mskramst/gridplay/src/components'
+let g:netrw_dirhist_7='/home/mskramst/repos/github.com/mskramst/gridplay/src'
+let g:netrw_dirhist_6='/home/mskramst/repos/github.com/mskramst/advent2024/templates/Mikey'
+let g:netrw_dirhist_5='/home/mskramst/.config/kitty'
+let g:netrw_dirhist_4='/home/mskramst/repos/github.com/mskramst/power-installer/linux/suckless'
+let g:netrw_dirhist_3='/home/mskramst/.config/nvim/lua/plugins'
+let g:netrw_dirhist_2='/home/mskramst/.config/nvim'
+let g:netrw_dirhist_1='/home/mskramst/.config/nvim/lua/config'
+let g:netrw_dirhist_0='/home/mskramst/repos/github.com/mskramst/riverflowing/.git'
+let g:netrw_dirhist_9='/home/mskramst/repos/github.com/mskramst/startanew'
