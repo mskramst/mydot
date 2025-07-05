@@ -1,0 +1,34 @@
+#!/bin/zshh
+#  ----------------------------- setup -------------------------------
+# cut and move to to .bashrc to load this file
+#if [ -f ~/.bashrc_ext ]; then
+#   . ~/.bashrc_ext
+#fi
+
+echo "Hello Mike!\n"
+
+# Source common shell configurations
+if [ -f "$HOME/.common_shell_config" ]; then
+    source "$HOME/.common_shell_config"
+fi
+
+# ----------------------------- history (ZSH-specific notes) -------------------------------
+# ZSH handles history differently than Bash's shopt -s histappend or checkwinsize.
+# The common file already sets set -o vi, HISTCONTROL, HISTSIZE, HISTFILESIZE.
+
+# ------------------------------ prompt (ZSH-specific) ------------------------------
+# Enable git info
+autoload -Uz vcs_info
+precmd() {
+  vcs_info
+}
+zstyle ':vcs_info:git:*' formats '%b '
+# Color prompt
+setopt PROMPT_SUBST
+PROMPT='%F{yellow}%n%f %F{blue}%~%f %F{red}${vcs_info_msg_0_}%f$ '
+
+# test to see if it will autocomplete java files (ZSH-specific)
+#_vim_java_completion() {
+#  COMPREPLY=( $(compgen -f -- "$2" | grep '\.(java|ts|js)$') )
+#}
+#complete -F _vim_java_completion vim
