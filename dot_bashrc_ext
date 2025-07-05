@@ -1,0 +1,237 @@
+#!/bin/bash
+#  ----------------------------- setup -------------------------------
+# cut and move to to .bashrc to load this file
+#if [ -f ~/.bashrc_ext ]; then
+#   . ~/.bashrc_ext
+#fi
+
+if [ -f "$HOME/.bash_aliases" ]; then
+   source "$HOME/.bash_aliases"
+fi
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# ------------------------ environmental variables -------------------------------
+
+#update path
+base_path="$STARTANEW/scripts"
+
+#Array of directories with only unique part of the path
+dirs=("dev" "coding" "gpt" "")
+
+#Loop to add directories to PATH
+for dir in "${dirs[@]}"; do
+    export PATH=$PATH:$base_path/$dir
+done
+
+export TEMPLATES="$HOME/Templates"
+export USER="${USER:-$(whoami)}"
+export GITUSER="mskramst"
+export REPOS="$HOME/repos"
+export GHREPOS="$REPOS/github.com/$GITUSER"
+export STARTANEW="$GHREPOS/startanew"
+export SNIPPETS="$STARTANEW/snippets"
+export SCRIPTS="$STARTANEW/scripts"
+export PSCRIPTS="$HOME/scripts"
+export NOTES="$STARTANEW/writing/notes"
+export TODODIR="$STARTANEW/todo"
+export BACKUPDIR="$STARTANEW/backup"
+#export PATH="$STARTANEW/scripts:$STARTANEW/scripts/dev:$STARTANEW/scripts/coding:$PATH"
+export DESKTOP="$HOME/Desktop"
+export DOCUMENTS="$HOME/Documents"
+export DOWNLOADS="$HOME/Downloads"
+export PICTURES="$HOME/Pictures"
+export HRULEWIDTH=73
+export EDITOR=vim
+export EDITOR_PREFIX=vim
+export VISUAL=vim
+export TERM=xterm-256color #controversial?
+export GOPRIVATE="github.com/$GITUSER"
+export GOPATH="$HOME/.local/bin"
+export GOBIN="$HOME/.local/bin"
+
+# -------------------------- color man pages -------------------------
+ export LESS="-R"
+ export LESS_TERMCAP_mb="[35m" # magenta
+ export LESS_TERMCAP_md="[33m" # yellow
+ export LESS_TERMCAP_me="" # "0m"
+ export LESS_TERMCAP_se="" # "0m"
+ export LESS_TERMCAP_so="[34m" # blue
+ export LESS_TERMCAP_ue="" # "0m"
+ export LESS_TERMCAP_us="[4m"  # underline
+
+# ----------------------------- history -------------------------------
+
+set -o vi
+HISTCONTROL=ignoreboth
+shopt -s histappend
+HISTSIZE=5000
+HISTFILESIZE=10000
+shopt -s checkwinsize
+
+# ------------------------------- path -------------------------------
+
+pathappend() {
+  declare arg
+  for arg in "$@"; do
+    test -d "${arg}" || continue
+    PATH=${PATH//:${arg}:/:}
+    PATH=${PATH/#${arg}:/}
+    PATH=${PATH/%:${arg}/}
+    export PATH="${PATH:+"${PATH}:"}${arg}"
+  done
+}
+
+pathprepend() {
+  for ARG in "$@"; do
+    test -d "${ARG}" || continue
+    PATH=${PATH//:${ARG}:/:}
+    PATH=${PATH/#${ARG}:/}
+    PATH=${PATH/%:${ARG}/}
+    export PATH="${ARG}${PATH:+":${PATH}"}"
+  done
+}
+
+pathappend "$HOME/scripts"
+
+export CDPATH=.:\
+~/repos/github.com:\
+~/repos/github.com/$USER:\
+~/repos/github.com/$USER/startanew:\
+~/repos:\
+~/Code\
+~
+
+
+# ------------------------------- dircolors ------------------------------
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r "$HOME/.dircolors" && eval "$(dircolors -b ~/.dircolors)" 
+    test -r "$HOME/.dircolors" && eval "$(dircolors -b)"
+    alias grep='grep --color=auto'
+    alias ls='ls --color=auto'
+fi
+
+
+# ------------------------------- colors -------------------------------
+
+[ -n "${TMUX}" ] && winidx=$(tmux display-message -p '#I')
+
+if (( winidx <0)); then
+  winidx=""
+fi
+
+# ------------------------------ prompt ------------------------------
+
+## set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;
+esac
+#${debian_chroot:+($debian_chroot)}
+if [ "$color_prompt" = yes ]; then
+	PS1='\n$winidx \[\033[01;37m\](\[\033[01;33m\]\u\033[01;37m\])
+  \[\033[01;37m\]\W\[\033[00m\]/ \[\033[01;33m\] $(__git_ps1) \[\033[01;37m\]->> \[\033[00;37m\]  '
+  else 
+	PS1='\u@\h:\w\$ '
+fi
+
+export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
+export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
+export LESS_TERMCAP_so=$'\e[01;44;37m' # begin reverse video
+export LESS_TERMCAP_us=$'\e[01;37m'    # begin underline
+export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
+export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
+export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
+export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
+
+# ------------------------------- completion -------------------------------
+
+source "$HOME/.bash_git"
+
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# ----------------------------- functions ----------------------------
+
+# go up x number of dirs with # argument
+
+goup() {
+  num=$1
+  while [ "$num" -ne 0  ];do
+    cd ..
+    num=$(( num - 1 ))
+  done
+}
+
+# clones into a specific directory
+
+clone() {
+  local repo="$1" user
+  repo="${repo#https://github.com/}"
+  repo="${repo#git@github.com:}"
+  if [[ $repo =~ / ]]; then
+    user="${repo%%/*}"
+  else
+    user="$GITUSER"
+    [[ -z "$user" ]] && user="$USER"
+  fi
+  local name="${repo##*/}"
+  local userd="$REPOS/github.com/$user"
+  local path="$userd/$name"
+  [[ -d "$path" ]] && cd "$path" && return
+  mkdir -p "$userd"
+  cd "$userd"
+  echo gh repo clone "$user/$name" -- --recurse-submodule
+  gh repo clone "$user/$name" -- --recurse-submodule
+  cd "$name"
+} && export -f clone
+
+
+duck(){
+    w3m "https://lite.duckduckgo.com/lite/?q=" + "$@"
+}
+
+google(){
+    w3m "https://www.google.com/search?q=" + "$@"
+}
+
+gccd()  { 
+  git clone "$1" && cd "$(basename "$1".git)" || exit; 
+}
+
+getip() {
+  ip -4 address show | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
+}
+
+#make and change into directory
+mkcd() {
+   local dir_name=$1
+    if [ -z "$dir_name" ]; then
+        echo "Enter a directory name."
+    elif [ -d "$dir_name" ]; then
+        echo "Directory already exists"
+    else
+        mkdir -p "$dir_name"
+        cd "$dir_name" || exit
+    fi
+}
+
+export -f gccd
+export -f getip
+
+#test to see if it will autocomplete java files
+#_vim_java_completion() {
+#  COMPREPLY=( $(compgen -f -- "$2" | grep '\.(java|ts|js)$') )
+#}
+
+#complete -F _vim_java_completion vim

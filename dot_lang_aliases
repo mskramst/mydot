@@ -1,0 +1,40 @@
+#!/bin/bash
+# programming specific aliases (not needed on all systems)
+
+#javascript
+alias spa='npm create vite@latest'
+alias pn='pnpm'
+alias pnpmup='pnpm add -g pnpm'
+alias pstart='pnpm start'
+alias pack='cat package.json'
+alias publish='npm publish --access=public'
+alias vpack='vim package.json'
+alias viteup='pnpx create-vite@latest --template react-ts'
+alias nextjs='npx create-next-app@latest'
+alias viteapp='pnpm create vite@latest'
+alias bat='batcat'
+alias podat='podman start -a'
+
+#java/kotlin
+alias gr='./gradlew'
+alias grt='gradle test'
+alias grr='gradle run'
+alias gtasks='gradle tasks'
+alias jc='javac *.java && java Main'
+alias dcd='cd dailycoding'
+alias javai='sdk install java 21.0.5-tem'
+alias gradlei='sdk install gradle 8.11.1'
+
+#php
+alias comp='composer'
+alias autoload='composer dump-autoload -o'
+
+#python & vm
+alias act='. dev/bin/activate'
+alias deact='deactivate'
+alias pipi='python3 -m pip install'
+alias pipu='pip --upgrade pip'
+
+#golang
+alias vm='vim main.go'
+alias gor='go run main.go'
