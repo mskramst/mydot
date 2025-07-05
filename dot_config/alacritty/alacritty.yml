@@ -1,0 +1,119 @@
+TERM: xterm-256color
+
+title: Alacritty
+
+# Window class (Linux/BSD only):
+class:
+  # Application instance name
+  instance: Alacritty
+  # General application class
+  general: Alacritty
+
+scrolling:
+  history: 5000
+
+window:
+  padding:
+    x: 10
+    y: 10
+
+dynamic_padding: false
+
+decorations: none
+
+font:
+  size: 14.0
+  regular:
+    family: Fira Sans
+
+colors:
+  # Default colors
+  primary:
+    # hard contrast: background = '#1d2021'
+    background: '#282828'
+    # soft contrast: background = '#32302f'
+    foreground: '#ebdbb2'
+
+  # Normal colors
+  normal:
+    black: '#282828'
+    red: '#cc241d'
+    green: '#98971a'
+    yellow: '#d79921'
+    blue: '#458588'
+    magenta: '#b16286'
+    cyan: '#689d6a'
+    white: '#a89984'
+
+  # Bright colors
+  bright:
+    black: '#928374'
+    red: '#fb4934'
+    green: '#b8bb26'
+    yellow: '#fabd2f'
+    blue: '#83a598'
+    magenta: '#d3869b'
+    cyan: '#8ec07c'
+    white: '#ebdbb2'
+
+selection:
+  text: '0x292d3e'
+  background: '0xbbc5ff'
+
+offset:
+  x: 1
+  y: 0
+
+window_opacity: 1.0
+
+key_bindings:
+  - key: C
+    mods: Control|Shift
+    action: Copy
+  - key: P
+    mods: Control|Shift
+    action: Paste
+  - key: W
+    mods: Command
+    action: ToggleFullscreen
+  - key: N
+    mods: Command|Shift
+    action: SpawnNewInstance
+  - key: F
+    mods: Command|Shift
+    action: ToggleFullscreen
+  - key: Equals
+    mods: Command|Shift
+    action: IncreaseFontSize
+  - key: Minus
+    mods: Command|Shift
+    action: DecreaseFontSize
+  - key: Back
+    mods: Super
+    chars: "\x15"
+  - key: Back
+    mods: Control
+    chars: "\x17"
+  - key: Back
+    mods: Alt
+    chars: "\ed"
+  - key: Left
+    mods: Super
+    chars: "\e[1;5D"
+  - key: Right
+    mods: Super
+    chars: "\e[1;5C"
+  - key: Left
+    mods: Control
+    chars: "\e[1;5D"
+  - key: Right
+    mods: Control
+    chars: "\e[1;5C"
+  - key: Left
+    mods: Alt
+    chars: "\e[1;5D"
+  - key: Right
+    mods: Alt
+    chars: "\e[1;5C"
+
+theme: Gruvbox-Dark
