@@ -7,8 +7,8 @@ case $- in
 esac
 
 # Source .bash_aliases if it exists (common for both shells)
-if [ -f "$HOME/.bash_aliases" ]; then
-   source "$HOME/.bash_aliases"
+if [ -f "$HOME/.aliases" ]; then
+   source "$HOME/.aliases"
 fi
 
 # ------------------------ environmental variables -------------------------------

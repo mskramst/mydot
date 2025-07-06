@@ -1,20 +1,15 @@
-#!/bin/zshh
+#!/bin/zsh
 #  ----------------------------- setup -------------------------------
 # cut and move to to .bashrc to load this file
-#if [ -f ~/.bashrc_ext ]; then
-#   . ~/.bashrc_ext
+#if [ -f ~/.zshrc_ext ]; then
+#   . ~/.zshrc_ext
 #fi
-
-echo "Hello Mike!\n"
 
 # Source common shell configurations
 if [ -f "$HOME/.common_shell_config" ]; then
     source "$HOME/.common_shell_config"
 fi
 
-# ----------------------------- history (ZSH-specific notes) -------------------------------
-# ZSH handles history differently than Bash's shopt -s histappend or checkwinsize.
-# The common file already sets set -o vi, HISTCONTROL, HISTSIZE, HISTFILESIZE.
 
 # ------------------------------ prompt (ZSH-specific) ------------------------------
 # Enable git info
@@ -25,8 +20,11 @@ precmd() {
 zstyle ':vcs_info:git:*' formats '%b '
 # Color prompt
 setopt PROMPT_SUBST
-PROMPT='%F{yellow}%n%f %F{blue}%~%f %F{red}${vcs_info_msg_0_}%f$ '
+precmd() { print -P "%~" }
+PROMPT="$winidx %F{cyan}(%n)%f  -->%F{blue}% %F{red}${vcs_info_msg_0_}%f "
 
+#	PS1='\n$winidx \[\033[01;37m\](\[\033[01;33m\]\u\033[01;37m\])
+#  \[\033[01;37m\]\W\[\033[00m\]/ \[\033[01;33m\] $(__git_ps1) \[\033[01;37m\]->> \[\033[00;37m\]  '
 # test to see if it will autocomplete java files (ZSH-specific)
 #_vim_java_completion() {
 #  COMPREPLY=( $(compgen -f -- "$2" | grep '\.(java|ts|js)$') )

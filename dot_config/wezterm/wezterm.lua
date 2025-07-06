@@ -12,14 +12,14 @@ config = {
 	window_close_confirmation = "NeverPrompt",
 	--window_decorations = "RESIZE",
   color_scheme = 'Guezwhoz',
-	font_size = 16,
+	font_size = 24,
 }
 
 config.harfbuzz_features = { 'calt=0' }
 
---wezterm.on("gui-startup", function(cmd)
---	local tab, pane, window = mux.spawn_window(cmd or {})
---	window:gui_window():maximize() end)
+wezterm.on("gui-startup", function(cmd)
+	local tab, pane, window = mux.spawn_window(cmd or {})
+	window:gui_window():maximize() end)
 
 -- and finally, return the configuration to wezterm
 return config
