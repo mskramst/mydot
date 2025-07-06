@@ -9,12 +9,14 @@ alias used="du -sh"
 alias chmox='chmod +x'
 alias aptup='sudo apt-get update'
 alias aptupg="sudo apt-get update && sudo apt-get upgrade"
-alias src='exec bash -l'     #reloads shell with all values (best)
+alias srcb='exec bash -l'     #reloads shell with all values (best)
+alias src='exec zsh -l'     #reloads shell with all values (best)
 alias info="sed -n '2p'"
-alias cz="chezmoi"
 
 # setup for syncing dot files to and from multiple computers
-alias config='/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
+# no longer using git bare for syncing repos
+#alias config='/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
+alias cz="chezmoi"
 
 # search
 alias gs="goog"   
