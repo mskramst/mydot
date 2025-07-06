@@ -17,9 +17,9 @@ config = {
 
 config.harfbuzz_features = { 'calt=0' }
 
-wezterm.on("gui-startup", function(cmd)
-	local tab, pane, window = mux.spawn_window(cmd or {})
-	window:gui_window():maximize() end)
+--wezterm.on("gui-startup", function(cmd)
+--	local tab, pane, window = mux.spawn_window(cmd or {})
+--	window:gui_window():maximize() end)
 
 -- and finally, return the configuration to wezterm
 return config
