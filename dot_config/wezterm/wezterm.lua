@@ -13,6 +13,7 @@ config = {
 	--window_decorations = "RESIZE",
   color_scheme = 'Guezwhoz',
 	font_size = 24,
+	audible_bell = "Disabled",
 }
 
 config.harfbuzz_features = { 'calt=0' }
