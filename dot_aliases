@@ -9,14 +9,12 @@ alias used="du -sh"
 alias chmox='chmod +x'
 alias aptup='sudo apt-get update'
 alias aptupg="sudo apt-get update && sudo apt-get upgrade"
-alias srcb='exec bash -l'     #reloads shell with all values (best)
-alias src='exec zsh -l'     #reloads shell with all values (best)
+alias src='exec bash -l'     #reloads shell with all values (best)
 alias info="sed -n '2p'"
+alias cz="chezmoi"
 
 # setup for syncing dot files to and from multiple computers
-# no longer using git bare for syncing repos
-#alias config='/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
-alias cz="chezmoi"
+alias config='/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
 
 # search
 alias gs="goog"   
@@ -53,6 +51,7 @@ alias status="git status"
 alias gita="git add -A ."
 alias gitc="git commit -m"
 alias gitac="git add -A . & git commit -m"
+alias gitcmt="git add -A . & git commit -m 'updated'"
 alias gitp="git push origin main && echo 'pushing main to origin'"
 
 #tmux
@@ -67,7 +66,7 @@ alias attach="tmux a -t"
 #useful
 alias yt3="yt-dlp -x --audio-format mp3" # mp3
 alias yt="ytfzf -L"
-alias ytlist="mpv -fs --playlist=current"
+alias ytlist="mpv --geometry 480x360 --playlist=current"
 alias yt4='yt-dlp -f best' # mp4
 alias entrgo='ls *.go | entr -r go run main.go'
 alias oll='ollama run llama3.2:latest'
