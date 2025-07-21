@@ -11,24 +11,54 @@ goup() {
 export goup
 
 clone() {
-  local repo="$1" user
+  # Declare local variables. Zsh prefers separate declarations or comma-separated.
+  # This syntax is compatible with both.
+  repo="$1"
+  user="" # Initialize to empty string
+  name=""
+  userd=""
+	newpath=""
+
+  # Remove 'https://github.com/' or 'git@github.com:' prefix
   repo="${repo#https://github.com/}"
   repo="${repo#git@github.com:}"
-  if [[ $repo =~ / ]]; then
+
+  # Determine the user
+  # Using simple string check for '/' as it's universally compatible.
+  # This works because the expanded 'repo' will either contain a '/'
+  # (e.g., 'user/repo') or it won't (e.g., 'repo-name' if $GITUSER/$USER is used).
+  if printf '%s' "$repo" | grep -q '/'; then
+    # Extract user if repo contains '/' (e.g., 'user/repo')
     user="${repo%%/*}"
   else
-    user="$GITUSER"
-    [[ -z "$user" ]] && user="$USER"
+    # Fallback to GITUSER or USER if no explicit user in repo string
+    # This Bash/Zsh compatible parameter expansion: ${VAR:-default_value}
+    user="${GITUSER:-$USER}"
   fi
-  local name="${repo##*/}"
-  local userd="$REPOS/github.com/$user"
-  local path="$userd/$name"
-  [[ -d "$path" ]] && cd "$path" && return
-  mkdir -p "$userd"
-  cd "$userd"
-  echo gh repo clone "$user/$name" -- --recurse-submodule
-  gh repo clone "$user/$name" -- --recurse-submodule
-  cd "$name"
+
+  name="${repo##*/}" # Extracts 'name' from 'user/name' or 'name'
+
+  userd="$REPOS/github.com/$user"
+  newpath="$userd/$name"
+
+  # Check if directory already exists
+  if [ -d "$newpath" ]; then
+    echo "Directory '$newpath' already exists. Changing into it."
+    cd "$newpath" || { echo "Error: Could not change directory to '$newpath'."; return 1; }
+    return 0 # Success
+  fi
+
+  # Create user directory
+  mkdir -p "$userd" || { echo "Error: Could not create directory '$userd'."; return 1; }
+  cd "$userd" || { echo "Error: Could not change directory to '$userd'."; return 1; }
+
+  echo "Cloning gh repo clone $user/$name -- --recurse-submodule into $userd"
+  gh repo clone "$user/$name" -- --recurse-submodule || { echo "Error: Failed to clone repository '$user/$name'."; return 1; }
+
+  # Change into the newly cloned directory
+  cd "$name" || { echo "Error: Could not change directory to '$name' after cloning."; return 1; }
+  echo "Successfully cloned and changed into '$newpath'."
+  return 0 # Success
 }
 export clone
 

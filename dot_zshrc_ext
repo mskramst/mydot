@@ -16,5 +16,5 @@ source "$HOME/.git-prompt.sh"
 
 setopt PROMPT_SUBST
 precmd() { print -P "\n%F{yellow}%1~%f/" }
-PROMPT="  $winidx%F{blue}(%n)%f %F{bright_white}%f$(__git_ps1)%f --> %F{blue}%f "
-
+BRIGHT_WHITE='\e[97m'
+PROMPT="  $winidx%F{white}(%n)%f %F{$BRIGHT_WHITE}%f%F{red}$(__git_ps1)%f --> %F{blue}%f "

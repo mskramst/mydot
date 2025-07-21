@@ -37,6 +37,8 @@ alias gitrv='git remote -v'
 alias saved='cd $STARTANEW/saved'
 alias notes='cd $STARTANEW/writing/notes'
 alias vnotes='cd $STARTANEW/coding/vim.md'
+alias l2c='cd $GHREPOS/learn2code'
+alias pi='cd $GHREPOS/power-installer'
 alias nv='nvim'
 
 # gist related
