@@ -10,11 +10,32 @@ if [ -f "$HOME/.common_shell_config" ]; then
     source "$HOME/.common_shell_config"
 fi
 
-source "$HOME/.git-prompt.sh"
 
 # ------------------------------ prompt (ZSH-specific) ------------------------------
 
-setopt PROMPT_SUBST
-precmd() { print -P "\n%F{yellow}%1~%f/" }
-BRIGHT_WHITE='\e[97m'
-PROMPT="  $winidx%F{white}(%n)%f %F{$BRIGHT_WHITE}%f%F{red}$(__git_ps1)%f --> %F{blue}%f "
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn
+# This line obtains information from the vcs.
+zstyle ':vcs_info:git*' formats "- (%F{red}%b%f) "
+precmd() {
+    vcs_info
+}
+
+# Enable substitution in the prompt.
+setopt prompt_subst
+
+# Config for the prompt. PS1 synonym.
+#precmd() { print -P "\n%F{yellow}%1~%f/" }
+#prompt='%F{yellow}%1/%f ${vcs_info_msg_0_}> '
+#precmd() { print -P "\n%F{yellow}%1~%f/" }
+#BRIGHT_WHITE='\e[97m'
+
+# Config for the prompt. PS1 synonym.
+#nPROMPT="  $winidx%F{white}(%n)%f %F{$BRIGHT_WHITE}%f%F{red}${vcs_info_msg_0_}%f --> %F{blue}%f "
+precmd() {
+    vcs_info
+		print -P
+    print -P '%B%1~/%b ${vcs_info_msg_0_}%f'
+}
+
+PROMPT=' %B%(!.#.)%b --> '
