@@ -9,7 +9,8 @@ alias used="du -sh"
 alias chmox='chmod +x'
 alias aptup='sudo apt-get update'
 alias aptupg="sudo apt-get update && sudo apt-get upgrade"
-alias src='exec bash -l'     #reloads shell with all values (best)
+alias rld='exec zsh -l'     # reload zsh
+alias src='exec bash -l'     # reload bash
 alias info="sed -n '2p'"
 alias cz="chezmoi"
 
@@ -35,6 +36,8 @@ alias gith='cd $GHREPOS'
 alias gitrv='git remote -v'
 alias saved='cd $STARTANEW/saved'
 alias notes='cd $STARTANEW/writing/notes'
+alias vnotes='cd $STARTANEW/coding/vim.md'
+alias nv='nvim'
 
 # gist related
 alias gistc='gh gist create -'
@@ -72,11 +75,9 @@ alias entrgo='ls *.go | entr -r go run main.go'
 alias oll='ollama run llama3.2:latest'
 
 # open the last modified file in a directory
-alias nv='nvim'
-alias vlast="vim $(ls -t | head -n1)"
-
+alias vlast="vim $STARTANEW/lastcmd"
 # save last cli cmd to file
-alias savelast='history -p !! > $STARTANEW/lastcmd'
+alias savelast="atuin history last -f \{command\} > $STARTANEW/lastcmd"
 
 # cat the last saved buffer
 alias catbuf='cat $STARTANEW/saved/buf'
