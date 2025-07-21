@@ -92,7 +92,6 @@ export CDPATH=.:\
 ~/repos/github.com/$USER:\
 ~/repos/github.com/$USER/startanew:\
 ~/repos:\
-~/Code\
 ~
 
 # ------------------------------- dircolors ------------------------------
