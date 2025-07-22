@@ -11,6 +11,14 @@ if [ -f "$HOME/.common_shell_config" ]; then
 fi
 
 
+# ------------------------------- colors -------------------------------
+
+[ -n "${TMUX}" ] && winidx=$(tmux display-message -p '#I')
+
+if (( winidx <0)); then
+  winidx=""
+fi
+
 # ------------------------------ prompt (ZSH-specific) ------------------------------
 
 autoload -Uz vcs_info
@@ -38,4 +46,4 @@ precmd() {
     print -P '%B%1~/%b ${vcs_info_msg_0_}%f'
 }
 
-PROMPT=' %B%(!.#.)%b --> '
+PROMPT='$winidx %B%(!.#.)%b --> '

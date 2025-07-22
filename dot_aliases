@@ -13,6 +13,8 @@ alias rld='exec zsh -l'     # reload zsh
 alias src='exec bash -l'     # reload bash
 alias info="sed -n '2p'"
 alias cz="chezmoi"
+alias czpush="chezmoi cd && chezmoi add -A . && chezmoi commit -m 'update dotfiles'"
+alias nv='nvim'
 
 # setup for syncing dot files to and from multiple computers
 alias config='/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
@@ -25,12 +27,13 @@ alias ol="ollama run llama3"
 # mods charmbracelet - open ai
 alias modsls='mods --list'
 alias modsh='mods --show'
+alias srcz="source ~/.zshrc"
+alias srcb="source ~/.bashrc"
 alias lang="source ~/.lang_aliases"
 
 # commonly used directories
 alias start='cd $STARTANEW'
 alias scripts='cd $SCRIPTS'
-alias pscripts='cd $PSCRIPTS'
 alias snippets='cd $SNIPPETS'
 alias gith='cd $GHREPOS'
 alias gitrv='git remote -v'
@@ -39,7 +42,6 @@ alias notes='cd $STARTANEW/writing/notes'
 alias vnotes='cd $STARTANEW/coding/vim.md'
 alias l2c='cd $GHREPOS/learn2code'
 alias pi='cd $GHREPOS/power-installer'
-alias nv='nvim'
 
 # gist related
 alias gistc='gh gist create -'
@@ -60,13 +62,11 @@ alias gitcmt="git add -A . & git commit -m 'updated'"
 alias gitp="git push origin main && echo 'pushing main to origin'"
 
 #tmux
-alias tls="tmux list-windows"
-alias tnot="tmux new -s work -d && tmux rename-window -t 1 'code' && tmux new-window && tmux rename-window -t 2 'run'"
-alias tdev="tmux new-window -t 3 && tmux rename-window -t 3 'dev';"
-alias tcode="tmux new -s work -d && && tmux rename-window"
-alias dev="tmux new -s dev -d"
-alias play="tmux new -s play -d"
+alias tlw="tmux list-windows"
+alias tls="tmux ls"
+alias tnew="tmux new -s"
 alias attach="tmux a -t"
+alias tkill="tmux kill-server"
 
 #useful
 alias yt3="yt-dlp -x --audio-format mp3" # mp3
