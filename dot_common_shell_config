@@ -39,7 +39,7 @@ export GOBIN="$HOME/.local/bin"
 
 # Update PATH (common logic)
 base_path="$STARTANEW/scripts"
-dirs=("dev" "coding" "gpt" "")
+dirs=("dev" "coding" "gpt" "js" "java" "")
 for dir in "${dirs[@]}"; do
     export PATH=$PATH:$base_path/$dir
 done
