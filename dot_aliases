@@ -39,16 +39,16 @@ alias gith='cd $GHREPOS'
 alias gitrv='git remote -v'
 alias saved='cd $STARTANEW/saved'
 alias notes='cd $STARTANEW/writing/notes'
-alias vnotes='cd $STARTANEW/coding/vim.md'
 alias l2c='cd $GHREPOS/learn2code'
 alias pi='cd $GHREPOS/power-installer'
+alias vnotes='vim  $STARTANEW/software/vim.md'
+alias cloneins='git clone -c http.sslVerify=false'
 
 # gist related
 alias gistc='gh gist create -'
 alias newgist='gh gist create $STARTANEW/saved/gist'
 alias gistls='gh gist ls'
 alias gisthelp='cat $STARTANEW/docs/gists-help.txt'
-alias cloneins='git clone -c http.sslVerify=false'
 
 # editing config files
 alias hl='highlight -O ansi'
