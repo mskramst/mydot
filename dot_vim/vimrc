@@ -95,12 +95,13 @@ if has('termguicolors')
 endif
 
 highlight Terminal guibg='#282828' guifg='#ebdbb2'
+"highlight Normal guibg=none guifg=none
 
 "{{For dark version}}
 set term=xterm
 
-" initalizes Gruvbox by default
-call Gruvbox()
+" initalizes Gruvbox by default; 
+call Ayu()
 
 let mapleader = " "
 :imap ii <Esc>
@@ -133,6 +134,7 @@ let g:ale_sign_warning = '*'
 " File specific / skeleton files when a new file with name created. 
 au BufNewFile README.md 0r $STARTANEW/snippets/skele/readme.md
 au BufNewFile *.java 0r $STARTANEW/snippets/skele/Main.java
+au BufNewFile main.py 0r $STARTANEW/snippets/skele/main.py
 
 augroup markdown_skeleton
    autocmd!
