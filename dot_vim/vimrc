@@ -4,13 +4,28 @@
 
 syntax on
 filetype on                       "required
-set nocompatible                  "be iMproved, required
+
+" --- General Fixes ---
+set hidden                   " Essential for keeping multiple buffers open
+set mouse=a                  " Good
+set clipboard=unnamedplus    " 'unnamedplus' is usually better for system clipboard
+set nobackup                 " You had 'nowritebackup', adding this for safety
+set noswapfile               " You have this twice in your file; once is enough
+
+" --- Search ---
+set ignorecase
+set smartcase
+set incsearch                " Highlight matches as you type
+set cursorline
+
+" --- Performance & UI ---
+set lazyredraw               " Don't redraw screen during macros (speed boost)
+set signcolumn=yes           " Prevents the screen 'jumping' when ALE markers appear
 set showmatch                     "Convenient for showing the matching braces"
-set hidden                        "Allows for file buffers
+
 set wildmenu                      "Creates a wild menu for toggling between files
 set colorcolumn=80                "Create a clear 80 char limit for coding"
 set nu                            "Hide/Display line numbers"
-set clipboard=unnamed
 "set relativenumber              "Hide/Show line numbers and relative value
                                   "  for easy navigation"
 set smartcase                     "Helps with searching text set noswapfile
@@ -27,13 +42,16 @@ set softtabstop=2
 set shiftwidth=2
 set ruler
 set wrapscan
-set path=$PWD/**                  "Enable fuzzy finding in the vim command line
 set noswapfile
 set nowritebackup
-set ttyfast
 set mouse=a                       "Allows for mouse scrolling
 set re=0                          "Fixes slow TS highlighting
 
+" --- Fix the FZF logic ---
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
+
+endif
 "Ignore looking in these locations for fuzzy finder
 
 set wildignore+=**/.git/**,**/__pycache__/**,**/venv/**,**/
@@ -75,7 +93,7 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 "Plug 'StanAngeloff/php.vim'
 "Plug 'arnaud-lb/vim-php-namespace'
-"Plug 'HerringtonDarkholme/yats.vim'  # Typescript support
+"Plug 'HerringtonDarkholme/yats.vim'  " Typescript support
 "Plug 'plasticboy/vim-markdown'
 "Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 "Plug 'tpope/vim-surround'
@@ -95,25 +113,25 @@ if has('termguicolors')
 endif
 
 highlight Terminal guibg='#282828' guifg='#ebdbb2'
-"highlight Normal guibg=none guifg=none
-
-"{{For dark version}}
-set term=xterm
+highlight ColorColumn ctermbg=235 guibg=#32302f
 
 " initalizes Gruvbox by default; 
 call Ayu()
 
 let mapleader = " "
-:imap ii <Esc>
+:imap jk <Esc>
+
+set formatoptions+=t " Auto-wrap text using textwidth
+set formatoptions+=c " Auto-wrap comments using textwidth, inserting leader
+set formatoptions+=r " Continue comment leader after hitting <Enter>
+set formatoptions+=q " Allow formatting of comments with 'gq'
+set formatoptions+=n " Recognize numbered lists
 
 "{{ Fuzzy finder }}
 
 let g:fzf_layout = { 'window': { 'width': 0.5, 'height': 0.3 } }
 let g:fzf_action = { 'enter': 'tab split' }
 let $FZF_DEFAULT_OPTS='--reverse'
-
-"Remove node_modules from fzf (not in git repo like below)
-let $FZF_DEFAULT_COMMAND='find . \( -name node_modules -o -name .git \) -prune -o -print'
 
 "{{ File type specific config (i.e. markdown, yaml }}
 nnoremap <leader>md :MarkdownPreview<CR>
@@ -132,7 +150,7 @@ let g:ale_sign_error = '@'
 let g:ale_sign_warning = '*'
 
 " File specific / skeleton files when a new file with name created. 
-au BufNewFile README.md 0r $STARTANEW/snippets/skele/readme.md
+"au BufNewFile README.md 0r $STARTANEW/snippets/skele/readme.md
 au BufNewFile *.java 0r $STARTANEW/snippets/skele/Main.java
 au BufNewFile main.py 0r $STARTANEW/snippets/skele/main.py
 
@@ -154,8 +172,8 @@ nnoremap <leader>gg :Files<CR>
 nnoremap <leader>xx :-1read $STARTANEW/snippets/
 nnoremap <leader>abbr :e ~/.vim/vimabbrs.vim<CR>
 nnoremap <leader>gp :.!gp<CR>
-nnoremap <leader>gp :.!gpmac<CR>
-nnoremap <leader>mm :.!mdurl
+nnoremap <leader>gpm :.!gpmac<CR>
+nnoremap <leader>mm :.!mdurl<CR>
 nnoremap <leader>o :on
 nnoremap <leader>tt :term
 nnoremap <Leader>b :ls<CR>:b<Space>
@@ -184,7 +202,5 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
-"Disable caps lock after leaving insert mode }}
-
+"Disable caps lock after leaving insert mode 
 au InsertLeave * call TurnOffCaps()
-
