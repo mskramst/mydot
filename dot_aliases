@@ -9,8 +9,8 @@ alias used="du -sh"
 alias chmox='chmod +x'
 alias aptup='sudo apt-get update'
 alias aptupg="sudo apt-get update && sudo apt-get upgrade"
-alias rld='exec zsh -l'     # reload zsh
-alias src='exec bash -l'     # reload bash
+alias src='exec zsh -l'     # reload zsh
+alias bash='exec bash -l'     # reload bash
 alias info="sed -n '2p'"
 alias cz="chezmoi"
 alias czpush="chezmoi cd && chezmoi add -A . && chezmoi commit -m 'update dotfiles'"
@@ -69,10 +69,10 @@ alias attach="tmux a -t"
 alias tkill="tmux kill-server"
 
 #useful
-alias yt3="yt-dlp -x --audio-format mp3" # mp3
+alias ytmp3="yt-dlp -x --audio-format mp3" # mp3
 alias yt="ytfzf -L"
 alias ytlist="mpv --geometry 480x360 --playlist=current"
-alias yt4='yt-dlp -f best' # mp4
+alias ytget='yt-dlp'
 alias entrgo='ls *.go | entr -r go run main.go'
 alias oll='ollama run llama3.2:latest'
 
@@ -83,4 +83,4 @@ alias savelast="atuin history last -f \{command\} > $STARTANEW/lastcmd"
 
 # cat the last saved buffer
 alias catbuf='cat $STARTANEW/saved/buf'
-
+alias copykey=ssh-copy-id -i ~/.ssh/id_ed25519.pub  

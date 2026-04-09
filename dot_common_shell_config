@@ -63,42 +63,34 @@ HISTCONTROL=ignoreboth
 HISTSIZE=5000
 HISTFILESIZE=10000
 
-# ------------------------------- path functions -------------------------------
-pathappend() {
-  declare arg
-  for arg in "$@"; do
-    test -d "${arg}" || continue
-    PATH=${PATH//:${arg}:/:}
-    PATH=${PATH/#${arg}:/}
-    PATH=${PATH/%:${arg}/}
-    export PATH="${PATH:+"${PATH}:"}${arg}"
-  done
-}
 
-pathprepend() {
-  for ARG in "$@"; do
-    test -d "${ARG}" || continue
-    PATH=${PATH//:${ARG}:/:}
-    PATH=${PATH/#${ARG}:/}
-    PATH=${PATH/%:${ARG}/}
-    export PATH="${ARG}${PATH:+":${PATH}"}"
-  done
-}
+# ------------------------------- PATH & CDPATH -------------------------------
 
-pathappend "$HOME/scripts"
+# 1. Tell Zsh to keep these arrays unique (removes duplicates automatically)
+typeset -U path cdpath
 
-export CDPATH=.:\
-~/repos/github.com:\
-~/repos/github.com/$USER:\
-~/repos/github.com/$USER/startanew:\
-~/repos:\
-~
+# 2. Add to PATH (replaces pathappend)
+# Just add to the array; Zsh handles the colons and existence checks if you want
+[[ -d "$HOME/scripts" ]] && path+=("$HOME/scripts")
+
+# 3. Configure CDPATH
+# This allows you to 'cd' into these folders from anywhere
+cdpath=(
+  .
+  ~/repos/github.com
+  ~/repos/github.com/$USER
+  ~/repos/github.com/$USER/startanew
+  ~/repos
+  ~
+)
+
+# 4. Final export to ensure other sub-processes see them
+export PATH CDPATH
 
 # ------------------------------- dircolors ------------------------------
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r "$HOME/.dircolors" && eval "$(dircolors -b ~/.dircolors)"
-    test -r "$HOME/.dircolors" && eval "$(dircolors -b)"
     alias grep='grep --color=auto'
     alias ls='ls --color=auto'
 fi

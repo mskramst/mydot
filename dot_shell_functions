@@ -1,14 +1,31 @@
 # ~/.shell_functions - Custom shell functions
 
 # Exporting functions ensures they are available in subshells
+
+# ~/.shell_functions
+
 goup() {
-  num=$1
-  while [ "$num" -ne 0  ];do
-    cd ..
-    num=$(( num - 1 ))
-  done
+  local num=${1:-1} # Default to 1 if no argument provided
+  for i in {1..$num}; do cd ..; done
 }
-export goup
+
+duck(){ w3m "https://lite.duckduckgo.com/lite/?q=$*" }
+google(){ w3m "https://www.google.com/search?q=$*" }
+
+getip() {
+  # Zsh-friendly IP fetch
+  ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '127.0.0.1'
+}
+
+mkcd() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: mkcd <directory>"
+  elif [[ -d "$1" ]]; then
+    cd "$1"
+  else
+    mkdir -p "$1" && cd "$1"
+  fi
+}
 
 clone() {
   # Declare local variables. Zsh prefers separate declarations or comma-separated.
@@ -60,27 +77,34 @@ clone() {
   echo "Successfully cloned and changed into '$newpath'."
   return 0 # Success
 }
-export clone
-
-duck(){
-    w3m "https://lite.duckduckgo.com/lite/?q=" + "$@"
-}
-export duck
-
-google(){
-    w3m "https://www.google.com/search?q=" + "$@"
-}
-export google
 
 gccd()  {
   git clone "$1" && cd "$(basename "$1".git)" || exit;
 }
-export gccd
 
-getip() {
-  ip -4 address show | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
+gonew() {
+    if [ -z "$1" ]; then
+        echo "Usage: gonew <project_name>"
+        return 1
+    fi
+
+    local PROJECT_NAME=$1
+    mkdir -p "$PROJECT_NAME" && cd "$PROJECT_NAME" || return
+
+    go mod init "github.com/mskramst/$PROJECT_NAME" # Using a more standard module path
+
+    cat <<EOF > main.go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Starting $PROJECT_NAME...")
 }
-export getip
+EOF
+    go fmt main.go
+    vim main.go
+}
 
 mkcd() {
    local dir_name=$1
@@ -93,4 +117,4 @@ mkcd() {
         cd "$dir_name" || exit
     fi
 }
-export mkcd
+

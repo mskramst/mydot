@@ -19,6 +19,12 @@ if (( winidx <0)); then
   winidx=""
 fi
 
+# This command takes your .dircolors file and 
+# turns it into the LS_COLORS variable automatically
+if [[ -f ~/.dircolors ]]; then
+  test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
+fi
+
 # ------------------------------ prompt (ZSH-specific) ------------------------------
 
 autoload -Uz vcs_info
