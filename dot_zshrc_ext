@@ -11,6 +11,28 @@ if [ -f "$HOME/.common_shell_config" ]; then
 fi
 
 
+// --------------------- Binary Picker based on OS --------------------
+# Detect OS once at shell startup
+export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
+
+# Helper function to run the correct binary
+run_go_tool() {
+    local tool_name=$1
+    shift
+    local bin_path="$HOME/scripts/.bin/${tool_name}_${OS_TYPE}"
+
+    if [[ -f "$bin_path" ]]; then
+        "$bin_path" "$@"
+    else
+        echo "Error: Binary for $tool_name not found at $bin_path"
+        return 1
+    fi
+}
+
+# uses different binary depending on OS
+snip() { run_go_tool "snip" "$@" }
+gp()   { run_go_tool "gp" "$@" }
+
 # ------------------------------- colors -------------------------------
 
 [ -n "${TMUX}" ] && winidx=$(tmux display-message -p '#I')
