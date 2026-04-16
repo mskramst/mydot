@@ -11,7 +11,7 @@ if [ -f "$HOME/.common_shell_config" ]; then
 fi
 
 
-// --------------------- Binary Picker based on OS --------------------
+# --------------------- Binary Picker based on OS --------------------
 # Detect OS once at shell startup
 export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
 
