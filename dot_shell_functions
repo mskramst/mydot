@@ -117,4 +117,3 @@ mkcd() {
         cd "$dir_name" || exit
     fi
 }
-
