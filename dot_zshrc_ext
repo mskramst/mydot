@@ -11,7 +11,7 @@ if [ -f "$HOME/.common_shell_config" ]; then
 fi
 
 
-// --------------------- Binary Picker based on OS --------------------
+# --------------------- Binary Picker based on OS --------------------
 # Detect OS once at shell startup
 export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
 
@@ -43,8 +43,16 @@ fi
 
 # This command takes your .dircolors file and 
 # turns it into the LS_COLORS variable automatically
-if [[ -f ~/.dircolors ]]; then
-  test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
+# # Determine which dircolors command to use
+if command -v dircolors >/dev/null 2>&1; then
+  DIR_COLORS_CMD="dircolors"
+elif command -v gdircolors >/dev/null 2>&1; then
+  DIR_COLORS_CMD="gdircolors"
+fi
+
+# If a command was found and the config file exists, run it
+if [[ -n "$DIR_COLORS_CMD" && -f "$HOME/.dircolors" ]]; then
+  eval "$($DIR_COLORS_CMD -b "$HOME/.dircolors")"
 fi
 
 # ------------------------------ prompt (ZSH-specific) ------------------------------
