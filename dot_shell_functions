@@ -117,3 +117,44 @@ mkcd() {
         cd "$dir_name" || exit
     fi
 }
+
+unlock() {
+    # Detect the OS (darwin or linux)
+    local OS_TYPE
+    OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
+
+    # Construct the path using your environment variable
+    local BIN_PATH="$STARTANEW/scripts/.bin/secure-vault_${OS_TYPE}"
+    local VAULT_PATH="$STARTANEW/scripts/.data/vault.enc"
+
+    if [[ -f "$BIN_PATH" ]]; then
+        # eval the output to load keys into the current session
+        eval $("$BIN_PATH" load "$VAULT_PATH")
+
+        if [[ $? -eq 0 ]]; then
+            echo "✅ Vault unlocked. Keys exported to session."
+        else
+            echo "❌ Decryption failed."
+        fi
+    else
+        echo "❌ Binary not found at $BIN_PATH"
+    fi
+}
+
+# Add this to .zshrc
+run_tool() {
+    local tool_name=$1
+    local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+    local arch=$(uname -m | sed 's/x86_64/amd64/')
+    local binary="$STARTANEW/scripts/.bin/${tool_name}_${os}_${arch}"
+
+    if [[ -f "$binary" ]]; then
+        "$binary" "${@:2}" # Runs binary with remaining arguments
+    else
+        echo "❌ Binary not found for this system: $binary"
+    fi
+}
+
+# Now you can alias your tools to use this wrapper
+#alias 32bits='run_tool 32bits'
+#alias vault='run_tool secure-vault'
