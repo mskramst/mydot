@@ -12,7 +12,7 @@ config = {
 	window_close_confirmation = "NeverPrompt",
 	--window_decorations = "RESIZE",
   color_scheme = 'Guezwhoz',
-	font_size = 24,
+	font_size = 16,
 	audible_bell = "Disabled",
 }
 

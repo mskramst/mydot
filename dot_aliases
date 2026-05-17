@@ -7,8 +7,8 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias used="du -sh"
 alias chmox='chmod +x'
-alias aptup='sudo apt-get update'
-alias aptupg="sudo apt-get update && sudo apt-get upgrade"
+alias aptup='sudo apt update'
+alias aptupg="sudo apt update && sudo apt upgrade"
 alias src='exec zsh -l'     # reload zsh
 alias bash='exec bash -l'     # reload bash
 alias info="sed -n '2p'"
@@ -41,7 +41,8 @@ alias saved='cd $STARTANEW/saved'
 alias notes='cd $STARTANEW/writing/notes'
 alias l2c='cd $GHREPOS/learn2code'
 alias pi='cd $GHREPOS/power-installer'
-alias vnotes='vim  $STARTANEW/software/vim.md'
+alias vnotes='vim $STARTANEW/software/vim.md'
+alias vimc='vim ~/.vim/vimrc'
 alias cloneins='git clone -c http.sslVerify=false'
 
 # gist related

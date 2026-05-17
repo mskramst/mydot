@@ -50,10 +50,10 @@ set re=0                          "Fixes slow TS highlighting
 " --- Fix the FZF logic ---
 if executable('rg')
   let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-
+  set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 endif
-"Ignore looking in these locations for fuzzy finder
 
+"Ignore looking in these locations for fuzzy finder
 set wildignore+=**/.git/**,**/__pycache__/**,**/venv/**,**/
       \node_modules/**,**/dist/**,**/build/**,*.o,*.pyc,*.swp
 
@@ -167,9 +167,13 @@ nnoremap <leader>vim :e ~/.vim/vimrc<CR>
 nnoremap <leader>not :e $STARTANEW/software/vim.md<CR>
 nnoremap <leader>bp :bp<CR>
 nnoremap <leader>bn :bn<CR>
+nnoremap <leader>bd :bd<CR>
+nnoremap H ^
+nnoremap L $
 nnoremap <leader>gf :GFiles<CR>
 nnoremap <leader>gg :Files<CR>
 nnoremap <leader>xx :-1read $STARTANEW/snippets/
+nnoremap <leader>sc :Files $STARTANEW/scripts<CR>
 nnoremap <leader>abbr :e ~/.vim/vimabbrs.vim<CR>
 nnoremap <leader>gp :.!gp<CR>
 nnoremap <leader>gpm :.!gpmac<CR>
@@ -183,10 +187,13 @@ nnoremap <Leader>ff vipgq
 nnoremap <leader>e :.!snip<CR>
 vnoremap <leader>s :w !snip save<CR>
 nnoremap <leader>l :!snip list<CR>
+nnoremap <leader>r :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
+nnoremap <F2> *<C-o>cgn
 nnoremap q: <nop>
+vnoremap <leader>y "+y
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
 
-
-nnoremap <Leader>out System.out.println(
 " Markdown specific
 map <leader>code i```<CR><CR>```
 
