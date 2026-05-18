@@ -11,15 +11,16 @@ if [ -f "$HOME/.common_shell_config" ]; then
 fi
 
 
-# --------------------- Binary Picker based on OS --------------------
+#--------------------- Binary Picker based on OS --------------------
 # Detect OS once at shell startup
 export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
+ARCH_TYPE=$(uname -m | sed 's/x86_64/amd64/') 
 
 # Helper function to run the correct binary
 run_go_tool() {
     local tool_name=$1
     shift
-    local bin_path="$HOME/scripts/.bin/${tool_name}_${OS_TYPE}"
+    local bin_path="$SCRIPTS/.bin/${tool_name}_${OS_TYPE}_${ARCH_TYPE}"
 
     if [[ -f "$bin_path" ]]; then
         "$bin_path" "$@"
@@ -32,6 +33,9 @@ run_go_tool() {
 # uses different binary depending on OS
 snip() { run_go_tool "snip" "$@" }
 gp()   { run_go_tool "gp" "$@" }
+32bits()   { run_go_tool "32bits" "$@" }
+secure()   { run_go_tool "secure" "$@" }
+reveal()   { run_go_tool "reveal" "$@" }
 
 # ------------------------------- colors -------------------------------
 
@@ -43,16 +47,8 @@ fi
 
 # This command takes your .dircolors file and 
 # turns it into the LS_COLORS variable automatically
-# # Determine which dircolors command to use
-if command -v dircolors >/dev/null 2>&1; then
-  DIR_COLORS_CMD="dircolors"
-elif command -v gdircolors >/dev/null 2>&1; then
-  DIR_COLORS_CMD="gdircolors"
-fi
-
-# If a command was found and the config file exists, run it
-if [[ -n "$DIR_COLORS_CMD" && -f "$HOME/.dircolors" ]]; then
-  eval "$($DIR_COLORS_CMD -b "$HOME/.dircolors")"
+if [[ -f ~/.dircolors ]]; then
+  test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
 fi
 
 # ------------------------------ prompt (ZSH-specific) ------------------------------

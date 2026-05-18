@@ -8,7 +8,7 @@ filetype on                       "required
 " --- General Fixes ---
 set hidden                   " Essential for keeping multiple buffers open
 set mouse=a                  " Good
-"set clipboard=unnamedplus    " 'unnamedplus' is usually better for system clipboard
+set clipboard=unnamedplus    " 'unnamedplus' is usually better for system clipboard
 set nobackup                 " You had 'nowritebackup', adding this for safety
 set noswapfile               " You have this twice in your file; once is enough
 
@@ -42,6 +42,7 @@ set softtabstop=2
 set shiftwidth=2
 set ruler
 set wrapscan
+set noswapfile
 set nowritebackup
 set mouse=a                       "Allows for mouse scrolling
 set re=0                          "Fixes slow TS highlighting
@@ -193,7 +194,6 @@ vnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
 
-nnoremap <Leader>out System.out.println(
 " Markdown specific
 map <leader>code i```<CR><CR>```
 

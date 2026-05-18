@@ -1,10 +1,5 @@
 # ------------------------------ aliases -----------------------------
-export LOCAL_OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-export LOCAL_ARCH=$(uname -m | sed 's/x86_64/amd64/')
 
-alias 32bits="$STARTANEW/scripts/.bin/32bits_${LOCAL_OS}_${LOCAL_ARCH}"
-alias vault="$STARTANEW/scripts/.bin/secure-vault_${LOCAL_OS}_${LOCAL_ARCH}"
-alias reveal="$STARTANEW/scripts/.bin/reveal_${LOCAL_OS}_${LOCAL_ARCH}"
 # linux cmds
 alias ls='ls -h --color=auto'
 alias mkdir='mkdir -p'
