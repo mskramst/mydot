@@ -117,3 +117,9 @@ mkcd() {
         cd "$dir_name" || exit
     fi
 }
+
+unlock-vault() {
+    read -s -p "Enter Vault Master Password: " VAULT_PW
+    export VAULT_PW
+    echo ""
+}
