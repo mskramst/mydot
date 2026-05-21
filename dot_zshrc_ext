@@ -51,31 +51,43 @@ if [[ -f ~/.dircolors ]]; then
   test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
 fi
 
-# ------------------------------ prompt (ZSH-specific) ------------------------------
+# -------------------------- Loads functions -------------------------
 
+# 1. Define the functions directory
+local my_func_dir="$HOME/.zsh/functions"
+
+# 2. Add it to fpath
+fpath=("$my_func_dir" $fpath)
+
+# 3. Autoload all files inside that directory dynamically
+if [ -d "$my_func_dir" ]; then
+    for func in "$my_func_dir"/*(N:.); do
+        autoload -Uz "${func:t}"
+    done
+fi
+
+
+# ------------------------------ prompt (ZSH-specific) ---------------
+
+# Load version control info library
 autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git svn
-# This line obtains information from the vcs.
+
+# Enable git (removed svn to speed up directory loading)
+zstyle ':vcs_info:*' enable git
+
+# Format git branch display (red branch name in parentheses)
 zstyle ':vcs_info:git*' formats "- (%F{red}%b%f) "
+
+# Ensure vcs_info updates before every prompt display
 precmd() {
     vcs_info
 }
 
-# Enable substitution in the prompt.
+# Enable parameter substitution in the prompt
 setopt prompt_subst
 
-# Config for the prompt. PS1 synonym.
-#precmd() { print -P "\n%F{yellow}%1~%f/" }
-#prompt='%F{yellow}%1/%f ${vcs_info_msg_0_}> '
-#precmd() { print -P "\n%F{yellow}%1~%f/" }
-#BRIGHT_WHITE='\e[97m'
+# A clean two-line prompt
+PROMPT='
+%B%1~/%b ${vcs_info_msg_0_}%f
+$winidx %B%(!.#.)%b --> '
 
-# Config for the prompt. PS1 synonym.
-#nPROMPT="  $winidx%F{white}(%n)%f %F{$BRIGHT_WHITE}%f%F{red}${vcs_info_msg_0_}%f --> %F{blue}%f "
-precmd() {
-    vcs_info
-		print -P
-    print -P '%B%1~/%b ${vcs_info_msg_0_}%f'
-}
-
-PROMPT='$winidx %B%(!.#.)%b --> '
