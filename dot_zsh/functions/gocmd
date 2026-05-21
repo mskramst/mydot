@@ -1,0 +1,19 @@
+# Creates a new runnable entrypoint (experiment) in the current project
+gocmd() {
+    if [ -z "$1" ]; then
+        echo "Usage: gocmd <cmd_name>"
+        return 1
+    fi
+    local CMD_NAME=$1
+    mkdir -p "cmd/$CMD_NAME"
+    cat <<EOF > "cmd/$CMD_NAME/main.go"
+package main
+import "fmt"
+func main() {
+    fmt.Println("Experiment $CMD_NAME is running...")
+}
+EOF
+    go fmt "cmd/$CMD_NAME/main.go"
+    vim "cmd/$CMD_NAME/main.go"
+}
+
