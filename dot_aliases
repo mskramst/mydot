@@ -22,14 +22,12 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME'
 # search
 alias gs="goog"   
 alias ws="websearch" 
-alias ol="ollama run llama3"
 
 # mods charmbracelet - open ai
 alias modsls='mods --list'
 alias modsh='mods --show'
 alias srcz="source ~/.zshrc"
 alias srcb="source ~/.bashrc"
-alias lang="source ~/.lang_aliases"
 
 # commonly used directories
 alias start='cd $STARTANEW'
@@ -58,8 +56,8 @@ alias hl='highlight -O ansi'
 alias status="git status"
 alias gita="git add -A ."
 alias gitc="git commit -m"
-alias gitac="git add -A . & git commit -m"
-alias gitcmt="git add -A . & git commit -m 'updated'"
+alias gitac="git add -A . && git commit -m"
+alias gitcmt="git add -A . && git commit -m 'updated'"
 alias gitp="git push origin main && echo 'pushing main to origin'"
 
 #tmux
@@ -75,13 +73,57 @@ alias yt="ytfzf -L"
 alias ytlist="mpv --geometry 480x360 --playlist=current"
 alias ytget='yt-dlp'
 alias entrgo='ls *.go | entr -r go run main.go'
+
+#ai
 alias oll='ollama run llama3.2:latest'
+alias ol="ollama run llama3"
 
 # open the last modified file in a directory
 alias vlast="vim $STARTANEW/lastcmd"
+
 # save last cli cmd to file
-alias savelast="atuin history last -f \{command\} > $STARTANEW/lastcmd"
+alias savelast='atuin history last -f {command} > $STARTANEW/lastcmd'
 
 # cat the last saved buffer
 alias catbuf='cat $STARTANEW/saved/buf'
-alias copykey=ssh-copy-id -i ~/.ssh/id_ed25519.pub  
+alias copykey='ssh-copy-id -i ~/.ssh/id_ed25519.pub'
+
+# ----- programming specific aliases (not needed on all systems) -----
+
+#javascript
+alias spa='npm create vite@latest'
+alias pn='pnpm'
+alias pnpmup='pnpm add -g pnpm'
+alias pstart='pnpm start'
+alias pack='cat package.json'
+alias publish='npm publish --access=public'
+alias vpack='vim package.json'
+alias viteup='pnpx create-vite@latest --template react-ts'
+alias nextjs='npx create-next-app@latest'
+alias viteapp='pnpm create vite@latest'
+alias bat='batcat'
+alias podat='podman start -a'
+
+#java/kotlin
+alias gr='./gradlew'
+alias grt='gradle test'
+alias grr='gradle run'
+alias gtasks='gradle tasks'
+alias jc='javac *.java && java Main'
+alias dcd='cd dailycoding'
+alias javai='sdk install java 21.0.5-tem'
+alias gradlei='sdk install gradle 8.11.1'
+
+#php
+alias cpsr='composer'
+alias cpsral='composer dump-autoload -o'
+
+#python & vm
+alias act='. dev/bin/activate'
+alias deact='deactivate'
+alias pipi='python3 -m pip install'
+alias pipu='pip --upgrade pip'
+
+#golang
+alias vm='vim main.go'
+alias gor='go run main.go'

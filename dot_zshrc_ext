@@ -5,12 +5,6 @@
 #   . ~/.zshrc_ext
 # fi
 
-# Source common shell configurations
-if [ -f "$HOME/.common_shell_config" ]; then
-    source "$HOME/.common_shell_config"
-fi
-
-
 #--------------------- Binary Picker based on OS --------------------
 # Detect OS once at shell startup
 export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -91,3 +85,147 @@ PROMPT='
 %B%1~/%b ${vcs_info_msg_0_}%f
 $winidx %B%(!.#.)%b --> '
 
+
+# ~/.common_shell_config - Common configurations for Bash and ZSH
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+    *) return;;
+esac
+
+# Source .bash_aliases if it exists (common for both shells)
+if [ -f "$HOME/.aliases" ]; then
+   source "$HOME/.aliases"
+fi
+
+# ------------------------ environmental variables -------------------------------
+export TEMPLATES="$HOME/Templates"
+export USER="${USER:-$(whoami)}"
+export GITUSER="mskramst"
+export REPOS="$HOME/repos"
+export GHREPOS="$REPOS/github.com/$GITUSER"
+export STARTANEW="$GHREPOS/startanew"
+export SNIPPETS="$STARTANEW/snippets"
+export SCRIPTS="$STARTANEW/scripts"
+export PSCRIPTS="$HOME/scripts"
+export NOTES="$STARTANEW/writing/notes"
+export TODODIR="$STARTANEW/todo"
+export BACKUPDIR="$STARTANEW/backup"
+export DESKTOP="$HOME/Desktop"
+export DOCUMENTS="$HOME/Documents"
+export DOWNLOADS="$HOME/Downloads"
+export PICTURES="$HOME/Pictures"
+export HRULEWIDTH=73
+export EDITOR=vim
+export EDITOR_PREFIX=vim
+export VISUAL=vim
+export TERM=xterm-256color # Consider if this is universally desired for both shells
+export GOPRIVATE="github.com/$GITUSER"
+export GOPATH="$HOME/.local/bin"
+export GOBIN="$HOME/.local/bin"
+
+# Update PATH (common logic)
+base_path="$STARTANEW/scripts"
+dirs=("dev" "coding" "gpt" "js" "java" "")
+for dir in "${dirs[@]}"; do
+    export PATH=$PATH:$base_path/$dir
+done
+
+# -------------------------- color man pages -------------------------
+# Using the more comprehensive set from bashrc_ext, which should work in ZSH too
+export LESS="-R"
+export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
+export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
+export LESS_TERMCAP_so=$'\e[01;44;37m' # begin reverse video
+export LESS_TERMCAP_us=$'\e[01;37m'    # begin underline
+export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
+export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
+export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
+export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
+
+# ----------------------------- history -------------------------------
+# Common history settings
+set -o vi
+HISTCONTROL=ignoreboth
+HISTSIZE=5000
+HISTFILESIZE=10000
+
+
+# ------------------------------- PATH & CDPATH -------------------------------
+
+# 1. Tell Zsh to keep these arrays unique (removes duplicates automatically)
+typeset -U path cdpath
+
+# 2. Add to PATH (replaces pathappend)
+# Just add to the array; Zsh handles the colons and existence checks if you want
+[[ -d "$HOME/scripts" ]] && path+=("$HOME/scripts")
+
+# 3. Configure CDPATH
+# This allows you to 'cd' into these folders from anywhere
+cdpath=(
+  .
+  ~/repos/github.com
+  ~/repos/github.com/$USER
+  ~/repos/github.com/$USER/startanew
+  ~/repos
+  ~
+)
+
+# 4. Final export to ensure other sub-processes see them
+export PATH CDPATH
+
+# ------------------------------- dircolors ------------------------------
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r "$HOME/.dircolors" && eval "$(dircolors -b ~/.dircolors)"
+    alias grep='grep --color=auto'
+    alias ls='ls --color=auto'
+fi
+
+# ------------------------------- colors (TMUX winidx) -------------------------------
+[ -n "${TMUX}" ] && winidx=$(tmux display-message -p '#I')
+if (( winidx <0)); then
+  winidx=""
+fi
+
+# ----------------------------- functions ----------------------------
+# _SHELL_OPTIONS_SAVE_X=$(set +o | grep xtrace)
+_SHELL_OPTIONS_SAVE_V=$(set +o | grep verbose)
+_SHELL_OPTIONS_SAVE_PEC="" # For ZSH's PRINT_EACH_COMMAND
+
+# Check if ZSH and save PRINT_EACH_COMMAND state
+if [ -n "$ZSH_VERSION" ]; then
+    if setopt | grep -q print_each_command; then
+        _SHELL_OPTIONS_SAVE_PEC="set"
+    fi
+    unsetopt xtrace verbose print_each_command 2>/dev/null # Disable for ZSH
+else
+    set +x +v # Disable for Bash
+fi
+
+# Source custom functions from a dedicated file
+if [ -f "$HOME/.shell_functions" ]; then
+    source "$HOME/.shell_functions"
+fi
+
+# Restore options if they were previously enabled
+if [ -n "$ZSH_VERSION" ]; then
+    if [[ "$_SHELL_OPTIONS_SAVE_PEC" == "set" ]]; then
+        setopt print_each_command
+    fi
+    if [[ "$_SHELL_OPTIONS_SAVE_X" == "set -o xtrace" ]]; then
+        setopt xtrace
+    fi
+    if [[ "$_SHELL_OPTIONS_SAVE_V" == "set -o verbose" ]]; then
+        setopt verbose
+    fi
+else
+    if [[ "$_SHELL_OPTIONS_SAVE_X" == "set -o xtrace" ]]; then
+        set -x
+    fi
+    if [[ "$_SHELL_OPTIONS_SAVE_V" == "set -o verbose" ]]; then
+        set -v
+    fi
+fi
+unset _SHELL_OPTIONS_SAVE_X _SHELL_OPTIONS_SAVE_V _SHELL_OPTIONS_SAVE_PEC
