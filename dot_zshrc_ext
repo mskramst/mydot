@@ -30,6 +30,7 @@ gp()   { run_go_tool "gp" "$@" }
 32bits()   { run_go_tool "32bits" "$@" }
 secure()   { run_go_tool "secure" "$@" }
 reveal()   { run_go_tool "reveal" "$@" }
+siph()   { run_go_tool "siph" "$@" }
 
 # ------------------------------- colors -------------------------------
 
