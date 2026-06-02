@@ -5,7 +5,17 @@
 #   . ~/.zshrc_ext
 # fi
 
+<<<<<<< Updated upstream
 #--------------------- Binary Picker based on OS --------------------
+=======
+# Source common shell configurations
+if [ -f "$HOME/.common_shell_config" ]; then
+    source "$HOME/.common_shell_config"
+fi
+
+
+# --------------------- Binary Picker based on OS --------------------
+>>>>>>> Stashed changes
 # Detect OS once at shell startup
 export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH_TYPE=$(uname -m | sed 's/x86_64/amd64/') 
@@ -42,8 +52,9 @@ fi
 
 # This command takes your .dircolors file and 
 # turns it into the LS_COLORS variable automatically
-if [[ -f ~/.dircolors ]]; then
-  test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
+#
+if [[ -f ~/.dircolors ]] && command -v dircolors >/dev/null 2>&1; then
+  eval "$(dircolors -b "$HOME/.dircolors")"
 fi
 
 # -------------------------- Loads functions -------------------------
