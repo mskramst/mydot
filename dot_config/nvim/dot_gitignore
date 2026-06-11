@@ -1,0 +1,8 @@
+# Ignore lazy.nvim plugin downloads
+/.local/share/nvim/
+/lazy-lock.json
+/.repro/
+
+# Ignore runtime state and caches if they bleed into config
+*.log
+.DS_Store
