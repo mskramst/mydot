@@ -6,7 +6,7 @@ vim.g.mapleader = " "
 
 -- --- UI Options ---
 vim.opt.number = true
-vim.opt.relativenumber = false     -- Toggle to true if you prefer relative tracking
+vim.opt.relativenumber = false
 vim.opt.cursorline = true
 vim.opt.signcolumn = "yes"
 vim.opt.colorcolumn = "80"
@@ -55,6 +55,7 @@ require("config.lazy")         -- Loads package layouts
 require("user.colorschemes")   -- Pulls colorschemes
 require("user.mappings")       -- Bootstraps personal action shortcuts
 require("lsp")                 -- Modern 0.11+ Native Language Processing Core
+require("user.abbreviations")
 
 -- ============================================================================
 -- {{ Legacy Script Bridges & File Handling Hooks }}
@@ -67,8 +68,6 @@ local source_if_readable = function(path)
         vim.cmd("source " .. expanded)
     end
 end
-source_if_readable("~/.vim/vimabbrs.vim")
-source_if_readable("~/.vim/vim-functions.vim")
 
 -- Centralized Autocommand Event Handlers
 local augroup = vim.api.nvim_create_augroup("UserConfigGroup", { clear = true })
@@ -106,9 +105,26 @@ vim.api.nvim_create_autocmd("FileType", {
     end
 })
 
--- Interactive Shell Caps-Lock Clear Hook
+-- Automatically force Caps Lock OFF using system X11 utilities
+local function turn_off_caps()
+    -- 1. Query xset for the current keyboard state
+    local xset_output = vim.fn.system("xset -q")
+    
+    -- 2. Use a clean Lua pattern match to grab the Caps Lock state
+    -- This mimics your exact Vimscript matchstr filter
+    local caps_state = string.match(xset_output, "Caps Lock:%s+([a-z]+)")
+
+    -- 3. If Caps Lock is currently active, tap it via xdotool to kill it
+    if caps_state == "on" then
+        vim.fn.system("xdotool key Caps_Lock")
+    end
+end
+
+-- Create an automated hook to strip Caps Lock every time you leave Insert Mode
 vim.api.nvim_create_autocmd("InsertLeave", {
-    group = augroup,
-    pattern = "*",
-    command = "call TurnOffCaps()"
+    group = vim.api.nvim_create_augroup("ClearCapsLockGroup", { clear = true }),
+    callback = function()
+        turn_off_caps()
+    end,
+    desc = "Automatically turn off Caps Lock on InsertLeave",
 })

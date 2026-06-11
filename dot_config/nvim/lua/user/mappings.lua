@@ -197,31 +197,52 @@ vim.keymap.set('n', '<leader>not', '<cmd>e $STARTANEW/software/vim.md<CR>', {
 -- ============================================================================
 -- {{ Snippet & Script Management }}
 -- ============================================================================
-
--- 1. Read / Insert a snippet from your custom snippet vault
+--
 vim.keymap.set('n', '<leader>xx', function()
-    -- Grab the path variable from your system shell environment
-    local snippet_path = vim.fn.getenv("STARTANEW") .. "/snippets/"
+    local raw_paths = {}
     
-    -- Use Telescope to instantly browse your snippets directory!
+    -- 1. Resolve your private repo path if the environment variable is live
+    local env_path = vim.fn.getenv("STARTANEW")
+    if env_path ~= vim.NIL and env_path ~= "" then
+        table.insert(raw_paths, vim.fn.expand(env_path .. "/snippets"))
+    end
+    
+    -- 2. Resolve your public chezmoi dotfile path forcefully
+    table.insert(raw_paths, vim.fn.expand("~/.snippets"))
+
+    -- 3. FILTER STEP: Only keep directories that actually exist on your machine
+    local search_paths = {}
+    for _, path in ipairs(raw_paths) do
+        if vim.fn.isdirectory(path) == 1 then
+            table.insert(search_paths, path)
+        end
+    end
+
+    -- Safety check: If absolutely no directories exist, let the user know gently
+    if #search_paths == 0 then
+        print("Error: Neither your private vault nor ~/.snippets exist yet!")
+        return
+    end
+
+    -- Launch Telescope parsing across only the valid target locations
     require('telescope.builtin').find_files({
-        prompt_title = "Select Snippet to Insert",
-        cwd = snippet_path,
+        prompt_title = "Select Snippet (Public & Private Vaults)",
+        search_dirs = search_paths, 
+        path_display = { "tail" },
+        hidden = true, -- Force Telescope to see hidden files if any exist
         attach_mappings = function(_, map)
-            -- Override the Enter key inside this specific telescope picker
             map('i', '<CR>', function(prompt_bufnr)
                 local selection = require('telescope.actions.state').get_selected_entry()
                 require('telescope.actions').close(prompt_bufnr)
-                
                 if selection then
-                    -- Execute a clean text read into the line right below your cursor
+                    -- Insert the snippet content directly below the cursor
                     vim.cmd("read " .. vim.fn.fnameescape(selection.path))
                 end
             end)
             return true
         end,
     })
-end, { desc = "Fuzzy find and insert code snippet" })
+end, { desc = "Fuzzy find and insert code snippet from aggregated vaults" })
 
 -- 2. Instantly browse and edit any custom shell scripts
 vim.keymap.set('n', '<leader>sc', function()

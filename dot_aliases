@@ -40,6 +40,7 @@ alias notes='cd $STARTANEW/writing/notes'
 alias l2c='cd $GHREPOS/learn2code'
 alias pi='cd $GHREPOS/power-installer'
 alias vnotes='vim $STARTANEW/software/vim.md'
+alias nvdir='cd $HOME/.config/nvim'
 alias vimc='vim ~/.vim/vimrc'
 alias cloneins='git clone -c http.sslVerify=false'
 
