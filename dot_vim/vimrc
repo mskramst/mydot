@@ -134,16 +134,10 @@ let g:fzf_action = { 'enter': 'tab split' }
 let $FZF_DEFAULT_OPTS='--reverse'
 
 "{{ File type specific config (i.e. markdown, yaml }}
-nnoremap <leader>md :MarkdownPreview<CR>
-autocmd Filetype markdown let b:autopairs_enabled = 0
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType json syntax match Comment +\/\/.\+$+
 autocmd FileType json syntax match Comment "//.*"
-au FileType markdown setlocal foldlevel=99
 
-let g:vim_markdown_folding_disabled = 1
-let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-let g:mkdp_markdown_css = '~/.vim/github-markdown.css'
 let g:go_fmt_command = "gofmt"
 let g:go_version_warning = 0
 let g:ale_sign_error = '@'
@@ -151,14 +145,8 @@ let g:ale_sign_warning = '*'
 let g:go_template_autocreate = 0
 
 " File specific / skeleton files when a new file with name created. 
-"au BufNewFile README.md 0r $STARTANEW/snippets/skele/readme.md
 au BufNewFile *.java 0r $STARTANEW/snippets/skele/Main.java
 au BufNewFile main.py 0r $STARTANEW/snippets/skele/main.py
-
-augroup markdown_skeleton
-   autocmd!
-   autocmd BufNewFile *.md execute '0r ' . expand('$STARTANEW/snippets/skele/markdown.md')
-augroup END
 
 au BufRead,BufNewFile *.md setlocal textwidth=80
 
@@ -166,25 +154,32 @@ au BufRead,BufNewFile *.md setlocal textwidth=80
 nnoremap <leader>so :so %<CR>
 nnoremap <leader>vim :e ~/.vim/vimrc<CR>
 nnoremap <leader>not :e $STARTANEW/software/vim.md<CR>
+
 nnoremap <leader>bp :bp<CR>
 nnoremap <leader>bn :bn<CR>
 nnoremap <leader>bd :bd<CR>
+
+" Move to end of the line and first non-blank character
 nnoremap H ^
 nnoremap L $
 nnoremap <leader>gf :GFiles<CR>
 nnoremap <leader>gg :Files<CR>
 nnoremap <leader>xx :-1read $STARTANEW/snippets/
 nnoremap <leader>sc :Files $STARTANEW/scripts<CR>
+
 nnoremap <leader>abbr :e ~/.vim/vimabbrs.vim<CR>
+
 nnoremap <leader>gp :.!gp<CR>
 nnoremap <leader>gpm :.!gpmac<CR>
 nnoremap <leader>mm :.!mdurl<CR>
 nnoremap <leader>o :on
-nnoremap <leader>tt :term
 nnoremap <Leader>b :ls<CR>:b<Space>
 nnoremap <Leader>put :.!yyy<CR>
 nnoremap <Leader>get :r $STARTANEW/saved/buf<CR>
+
+" used to format text
 nnoremap <Leader>ff vipgq
+
 nnoremap <leader>e :.!snip<CR>
 vnoremap <leader>s :w !snip save<CR>
 nnoremap <leader>l :!snip list<CR>
@@ -212,3 +207,4 @@ map <C-l> <C-w>l
 
 "Disable caps lock after leaving insert mode 
 au InsertLeave * call TurnOffCaps()
+

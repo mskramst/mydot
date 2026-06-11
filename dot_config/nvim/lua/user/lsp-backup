@@ -1,48 +1,60 @@
 local lspconfig = require("lspconfig")
 local null_ls = require("null-ls")
 
+-- Clean, native keymapper abstraction
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
-    vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
-        silent = true,
-    })
+    vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { buffer = bufnr, silent = true }, opts or {}))
 end
 
+-- 1. Modernized On-Attach Process
 local on_attach = function(client, bufnr)
-    vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
-    vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
-    vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
-    vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
-    vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
-    vim.cmd("command! LspRefs lua vim.lsp.buf.references()")
-    vim.cmd("command! LspTypeDef lua vim.lsp.buf.type_definition()")
-    vim.cmd("command! LspImplementation lua vim.lsp.buf.implementation()")
-    vim.cmd("command! LspDiagPrev lua vim.diagnostic.goto_prev()")
-    vim.cmd("command! LspDiagNext lua vim.diagnostic.goto_next()")
-    vim.cmd("command! LspDiagLine lua vim.diagnostic.open_float()")
-    vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
-    buf_map(bufnr, "n", "gd", ":LspDef<CR>")
-    buf_map(bufnr, "n", "gr", ":LspRename<CR>")
-    buf_map(bufnr, "n", "gy", ":LspTypeDef<CR>")
-    buf_map(bufnr, "n", "K", ":LspHover<CR>")
-    buf_map(bufnr, "n", "[a", ":LspDiagPrev<CR>")
-    buf_map(bufnr, "n", "]a", ":LspDiagNext<CR>")
-    buf_map(bufnr, "n", "ga", ":LspCodeAction<CR>")
-    buf_map(bufnr, "n", "<Leader>a", ":LspDiagLine<CR>")
-    buf_map(bufnr, "i", "<C-x><C-x>", "<cmd> LspSignatureHelp<CR>")
+    -- Define user commands using the clean native Vim API
+    vim.api.nvim_buf_create_user_command(bufnr, "LspDef", function() vim.lsp.buf.definition() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspFormatting", function() vim.lsp.buf.format({ async = true }) end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspCodeAction", function() vim.lsp.buf.code_action() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspHover", function() vim.lsp.buf.hover() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspRename", function() vim.lsp.buf.rename() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspRefs", function() vim.lsp.buf.references() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspTypeDef", function() vim.lsp.buf.type_definition() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspImplementation", function() vim.lsp.buf.implementation() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspDiagPrev", function() vim.diagnostic.goto_prev() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspDiagNext", function() vim.diagnostic.goto_next() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspDiagLine", function() vim.diagnostic.open_float() end, {})
+    vim.api.nvim_buf_create_user_command(bufnr, "LspSignatureHelp", function() vim.lsp.buf.signature_help() end, {})
+
+    -- Keybindings mapping directly using native vim.keymap.set
+    buf_map(bufnr, "n", "gd", vim.lsp.buf.definition)
+    buf_map(bufnr, "n", "gr", vim.lsp.buf.rename)
+    buf_map(bufnr, "n", "gy", vim.lsp.buf.type_definition)
+    buf_map(bufnr, "n", "K",  vim.lsp.buf.hover)
+    buf_map(bufnr, "n", "[a", vim.diagnostic.goto_prev)
+    buf_map(bufnr, "n", "]a", vim.diagnostic.goto_next)
+    buf_map(bufnr, "n", "ga", vim.lsp.buf.code_action)
+    buf_map(bufnr, "n", "<Leader>a", vim.diagnostic.open_float)
+    buf_map(bufnr, "i", "<C-x><C-x>", vim.lsp.buf.signature_help)
 end
-lspconfig.tsserver.setup({
+
+-- 2. Setup standard capabilities from your nvim-cmp autocomplete engine
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+-- 3. Modernized TypeScript Setup (Note the name change to ts_ls)
+lspconfig.ts_ls.setup({
+    capabilities = capabilities,
     on_attach = function(client, bufnr)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
-        local ts_utils = require("nvim-lsp-ts-utils")
-        ts_utils.setup({})
-        ts_utils.setup_client(client)
-        buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
-        buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
-        buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
+        -- FIXED: Modern way to turn off formatting so null-ls/prettier handles it
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+        
         on_attach(client, bufnr)
     end,
+    init_options = {
+        preferences = {
+            disableSuggestions = true,
+        },
+    },
 })
+
+-- 4. Linting and Formatting via null-ls
 null_ls.setup({
     sources = {
         null_ls.builtins.diagnostics.eslint,
@@ -52,14 +64,14 @@ null_ls.setup({
     on_attach = on_attach,
 })
 
-require('lspconfig').tsserver.setup({
-    init_options = {
-        preferences = {
-            disableSuggestions = true,
-        },
-    },
-})
+-- 5. Additional Server Implementations
+lspconfig.kotlin_language_server.setup({ capabilities = capabilities, on_attach = on_attach })
+lspconfig.pyright.setup({ capabilities = capabilities, on_attach = on_attach })
 
-require'lspconfig'.kotlin_language_server.setup{}
-require'lspconfig'.pyright.setup{}
-require('go').setup()
+-- 6. Go Environment (Delegated completely to your ray-x/go.nvim plugin)
+require('go').setup({
+    lsp_on_attach = on_attach,
+    lsp_cfg = {
+        capabilities = capabilities,
+    }
+})

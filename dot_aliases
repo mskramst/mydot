@@ -45,8 +45,7 @@ alias cloneins='git clone -c http.sslVerify=false'
 
 # gist related
 alias gistc='gh gist create -'
-alias newgist='gh gist create $STARTANEW/saved/gist'
-alias gistls='gh gist ls'
+alias gistls='gh gist list'
 alias gisthelp='cat $STARTANEW/docs/gists-help.txt'
 
 # editing config files

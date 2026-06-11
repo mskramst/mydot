@@ -1,9 +1,10 @@
-vim.o.background = "dark" -- or "light" for light mode
-vim.cmd([[colorscheme gruvbox]])
+-- ============================================================================
+-- {{ Colorscheme Global Options }}
+-- ============================================================================
+vim.o.background = "dark" -- Sets the background anchor palette
 
--- Default options:
 require("gruvbox").setup({
-  terminal_colors = true, -- add neovim terminal colors
+  terminal_colors = true, 
   undercurl = true,
   underline = true,
   bold = true,
@@ -19,11 +20,20 @@ require("gruvbox").setup({
   invert_signs = false,
   invert_tabline = false,
   invert_intend_guides = false,
-  inverse = true, -- invert background for search, diffs, statuslines and errors
-  contrast = "", -- can be "hard", "soft" or empty string
+  inverse = true, 
+  contrast = "hard",
   palette_overrides = {},
-  overrides = {},
+  overrides = {
+    -- Force the main workspace background to pure black
+    Normal = { bg = "#000000" },
+    -- Force vertical split border bars to match the darkness
+    WinSeparator = { fg = "#282828", bg = "#000000" },
+    -- Force the line number column to match the background
+    SignColumn = { bg = "#000000" },
+  },
+  --overrides = {},
   dim_inactive = false,
   transparent_mode = false,
 })
-vim.cmd("colorscheme gruvbox")
+
+vim.cmd([[colorscheme gruvbox]])
