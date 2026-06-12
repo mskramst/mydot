@@ -43,9 +43,14 @@ fi
 # This command takes your .dircolors file and 
 # turns it into the LS_COLORS variable automatically
 if [[ -f ~/.dircolors ]]; then
-  test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
+  if command -v gdircolors &> /dev/null; then
+    # Use the Homebrew GNU version on macOS
+    test -r "$HOME/.dircolors" && eval "$(gdircolors -b "$HOME/.dircolors")"
+  elif command -v dircolors &> /dev/null; then
+    # Use the standard GNU version on Linux
+    test -r "$HOME/.dircolors" && eval "$(dircolors -b "$HOME/.dircolors")"
+  fi
 fi
-
 # -------------------------- Loads functions -------------------------
 
 # 1. Define the functions directory

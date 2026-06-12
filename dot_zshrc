@@ -1,6 +1,25 @@
 # Core Visuals & System Preferences (Universal)
-test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
-alias ls='ls --color=auto'
+# Check if we are on macOS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # 1. Handle dircolors using Homebrew's gdircolors if available
+  if command -v gdircolors &> /dev/null; then
+    test -r "$HOME/.dircolors" && eval "$(gdircolors -b "$HOME/.dircolors")"
+  fi
+  
+  # 2. macOS native 'ls' uses -G for color, or 'gls' if you want GNU style
+  if command -v gls &> /dev/null; then
+    alias ls='gls --color=auto'
+  else
+    alias ls='ls -G'
+  fi
+
+# Otherwise, assume Linux/GNU environment
+else
+  test -r "$HOME/.dircolors" && eval "$(dircolors -b "$HOME/.dircolors")"
+  alias ls='ls --color=auto'
+fi
+
+# This line works perfectly on both platforms once LS_COLORS is set above
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Hook into your High-Speed Private Extensions
