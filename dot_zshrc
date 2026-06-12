@@ -1,0 +1,14 @@
+# Core Visuals & System Preferences (Universal)
+test -r "$HOME/.dircolors" && eval $(dircolors -b "$HOME/.dircolors")
+alias ls='ls --color=auto'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# Hook into your High-Speed Private Extensions
+if [ -f "$HOME/.zshrc_ext" ]; then
+    . "$HOME/.zshrc_ext"
+fi
+
+# Hook into Local Machine-Specific Toolchains
+if [ -f "$HOME/.zshrc_local" ]; then
+    . "$HOME/.zshrc_local"
+fi
