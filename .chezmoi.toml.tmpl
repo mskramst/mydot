@@ -1,0 +1,18 @@
+[data]
+    # 1. Your permanent public proxy email used across all machines
+    email = "173949+mskramst@users.noreply.github.com"
+
+    # 2. Automatically detect if the machine is running WSL
+    {{ if (env "WSL_DISTRO_NAME") -}}
+    is_wsl = true
+    wezterm_font_size = 12.0
+    {{ else -}}
+    is_wsl = false
+
+    # 3. Handle Mac vs. Native Linux defaults dynamically
+    {{ if eq .chezmoi.os "darwin" -}}
+    wezterm_font_size = 12.0
+    {{ else -}}
+    wezterm_font_size = 14.0
+    {{ end -}}
+    {{ end -}}

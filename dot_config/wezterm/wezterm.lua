@@ -1,26 +1,23 @@
--- Pull in the wezterm API
+-- If we are running inside WSL, completely skip outputting this engine block
+{{ if .is_wsl -}}
+-- WSL Instance: WezTerm configurations are handled by the Windows host.
+{{ else -}}
+-- Linux/macOS Native Instance
 local wezterm = require 'wezterm'
-
--- This will hold the configuration.
 local config = wezterm.config_builder()
 
--- This is where you actually apply your config choices
-
-config = {
-	automatically_reload_config = true,
-	enable_tab_bar = false,
-	window_close_confirmation = "NeverPrompt",
-	--window_decorations = "RESIZE",
-  color_scheme = 'Guezwhoz',
-	font_size = 16,
-	audible_bell = "Disabled",
-}
-
+-- Core Window and UI Mechanics
+config.automatically_reload_config = true
+config.enable_tab_bar = false
+config.window_close_confirmation = "NeverPrompt"
+config.color_scheme = 'Guezwhoz'
+config.audible_bell = "Disabled"
 config.harfbuzz_features = { 'calt=0' }
 
---wezterm.on("gui-startup", function(cmd)
---	local tab, pane, window = mux.spawn_window(cmd or {})
---	window:gui_window():maximize() end)
+-- Dynamic Profile Injection via Chezmoi Local Data Blocks
+config.font = wezterm.font 'JetBrains Mono'
+config.font_size = {{ .wezterm_font_size }}
 
--- and finally, return the configuration to wezterm
+-- Finally, return the verified configuration mapping payload
 return config
+{{ end -}}

@@ -1,0 +1,10 @@
+[user]
+email = 173949+mskramst@users.noreply.github.com 
+	name = mskramst 
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[init]
+	defaultBranch = main
+[core]
+	editor = nvim
