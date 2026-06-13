@@ -24,13 +24,19 @@ run_go_tool() {
     fi
 }
 
-# uses different binary depending on OS
-snip() { run_go_tool "snip" "$@" }
-gp()   { run_go_tool "gp" "$@" }
-32bits()   { run_go_tool "32bits" "$@" }
-secure()   { run_go_tool "secure" "$@" }
-reveal()   { run_go_tool "reveal" "$@" }
-siph()   { run_go_tool "siph" "$@" }
+local -a go_tools=(
+    snip 
+    gp 
+    32bits 
+    secure 
+    reveal 
+    siph
+)
+
+# Dynamically generate wrapper FUNCTIONS so Vim can read them
+for tool in "${go_tools[@]}"; do
+    eval "${tool}() { run_go_tool \"${tool}\" \"\$@\"; }"
+done
 
 # ------------------------------- colors -------------------------------
 

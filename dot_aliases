@@ -1,7 +1,6 @@
 # ------------------------------ aliases -----------------------------
 
 # linux cmds
-alias ls='ls -h --color=auto'
 alias mkdir='mkdir -p'
 alias cp='cp -i'
 alias mv='mv -i'
