@@ -1,28 +1,14 @@
 #!/bin/zsh
-#  ----------------------------- setup -------------------------------
-# cut and move to to .bashrc to load this file
-# if [ -f ~/.zshrc_ext ]; then
-#   . ~/.zshrc_ext
-# fi
+#
+if [ -f "$HOME/.aliases" ]; then
+   source "$HOME/.aliases"
+fi
 
-#--------------------- Binary Picker based on OS --------------------
 # Detect OS once at shell startup
 export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH_TYPE=$(uname -m | sed 's/x86_64/amd64/') 
 
 # Helper function to run the correct binary
-run_go_tool() {
-    local tool_name=$1
-    shift
-    local bin_path="$SCRIPTS/.bin/${tool_name}_${OS_TYPE}_${ARCH_TYPE}"
-
-    if [[ -f "$bin_path" ]]; then
-        "$bin_path" "$@"
-    else
-        echo "Error: Binary for $tool_name not found at $bin_path"
-        return 1
-    fi
-}
 
 local -a go_tools=(
     snip 
@@ -46,17 +32,6 @@ if (( winidx <0)); then
   winidx=""
 fi
 
-# This command takes your .dircolors file and 
-# turns it into the LS_COLORS variable automatically
-if [[ -f ~/.dircolors ]]; then
-  if command -v gdircolors &> /dev/null; then
-    # Use the Homebrew GNU version on macOS
-    test -r "$HOME/.dircolors" && eval "$(gdircolors -b "$HOME/.dircolors")"
-  elif command -v dircolors &> /dev/null; then
-    # Use the standard GNU version on Linux
-    test -r "$HOME/.dircolors" && eval "$(dircolors -b "$HOME/.dircolors")"
-  fi
-fi
 # -------------------------- Loads functions -------------------------
 
 # 1. Define the functions directory
@@ -96,20 +71,6 @@ setopt prompt_subst
 PROMPT='
 %B%1~/%b ${vcs_info_msg_0_}%f
 $winidx %B%(!.#.)%b --> '
-
-
-# ~/.common_shell_config - Common configurations for Bash and ZSH
-
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-    *) return;;
-esac
-
-# Source .bash_aliases if it exists (common for both shells)
-if [ -f "$HOME/.aliases" ]; then
-   source "$HOME/.aliases"
-fi
 
 # ------------------------ environmental variables -------------------------------
 export TEMPLATES="$HOME/Templates"
@@ -163,7 +124,6 @@ HISTCONTROL=ignoreboth
 HISTSIZE=5000
 HISTFILESIZE=10000
 
-
 # ------------------------------- PATH & CDPATH -------------------------------
 
 # 1. Tell Zsh to keep these arrays unique (removes duplicates automatically)
@@ -184,60 +144,10 @@ cdpath=(
   ~
 )
 
-# 4. Final export to ensure other sub-processes see them
 export PATH CDPATH
 
-# ------------------------------- dircolors ------------------------------
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r "$HOME/.dircolors" && eval "$(dircolors -b ~/.dircolors)"
-    alias grep='grep --color=auto'
-    alias ls='ls --color=auto'
-fi
-
-# ------------------------------- colors (TMUX winidx) -------------------------------
 [ -n "${TMUX}" ] && winidx=$(tmux display-message -p '#I')
 if (( winidx <0)); then
   winidx=""
 fi
 
-# ----------------------------- functions ----------------------------
-# _SHELL_OPTIONS_SAVE_X=$(set +o | grep xtrace)
-_SHELL_OPTIONS_SAVE_V=$(set +o | grep verbose)
-_SHELL_OPTIONS_SAVE_PEC="" # For ZSH's PRINT_EACH_COMMAND
-
-# Check if ZSH and save PRINT_EACH_COMMAND state
-if [ -n "$ZSH_VERSION" ]; then
-    if setopt | grep -q print_each_command; then
-        _SHELL_OPTIONS_SAVE_PEC="set"
-    fi
-    unsetopt xtrace verbose print_each_command 2>/dev/null # Disable for ZSH
-else
-    set +x +v # Disable for Bash
-fi
-
-# Source custom functions from a dedicated file
-if [ -f "$HOME/.shell_functions" ]; then
-    source "$HOME/.shell_functions"
-fi
-
-# Restore options if they were previously enabled
-if [ -n "$ZSH_VERSION" ]; then
-    if [[ "$_SHELL_OPTIONS_SAVE_PEC" == "set" ]]; then
-        setopt print_each_command
-    fi
-    if [[ "$_SHELL_OPTIONS_SAVE_X" == "set -o xtrace" ]]; then
-        setopt xtrace
-    fi
-    if [[ "$_SHELL_OPTIONS_SAVE_V" == "set -o verbose" ]]; then
-        setopt verbose
-    fi
-else
-    if [[ "$_SHELL_OPTIONS_SAVE_X" == "set -o xtrace" ]]; then
-        set -x
-    fi
-    if [[ "$_SHELL_OPTIONS_SAVE_V" == "set -o verbose" ]]; then
-        set -v
-    fi
-fi
-unset _SHELL_OPTIONS_SAVE_X _SHELL_OPTIONS_SAVE_V _SHELL_OPTIONS_SAVE_PEC
