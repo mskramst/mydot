@@ -1,0 +1,13 @@
+run_go_tool() {
+    local tool_name=$1
+    shift
+    local bin_path="$SCRIPTS/.bin/${tool_name}_${OS_TYPE}_${ARCH_TYPE}"
+
+    if [[ -f "$bin_path" ]]; then
+        "$bin_path" "$@"
+    else
+        echo "Error: Binary for $tool_name not found at $bin_path"
+        return 1
+    fi
+}
+
