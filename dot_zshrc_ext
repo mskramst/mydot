@@ -32,6 +32,15 @@ if (( winidx <0)); then
   winidx=""
 fi
 
+# ----------------------------- Atuin Up-Arrow Binding -----------------------
+if command -v atuin &> /dev/null; then
+    # Initialize Atuin's Zsh hooks first
+    eval "$(atuin init zsh)"
+
+    # Bind the Up Arrow key to trigger the Atuin history widget
+    bindkey '^[[A' atuin-up-search
+    bindkey '^[OA' atuin-up-search
+fi
 # -------------------------- Loads functions -------------------------
 
 # 1. Define the functions directory
