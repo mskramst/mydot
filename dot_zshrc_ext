@@ -94,8 +94,9 @@ export EDITOR=vim
 export EDITOR_PREFIX=vim
 export VISUAL=vim
 export TERM=xterm-256color # Consider if this is universally desired for both shells
+
 export GOPRIVATE="github.com/$GITUSER"
-export GOPATH="$HOME/.local/bin"
+export GOPATH="$HOME/go"      
 export GOBIN="$HOME/.local/bin"
 
 # Update PATH (common logic)
