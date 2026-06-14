@@ -1,3 +1,18 @@
+---- ---------------------------------------------------------------------------
+-- Environment Path Insurance Block (Fixes 'go is not executable')
+-- ---------------------------------------------------------------------------
+local home = os.getenv("HOME")
+local paths = {
+  home .. "/go/bin",
+  home .. "/.local/bin",
+  "/usr/local/go/bin",
+  "/usr/local/bin",
+  "/usr/bin",
+  "/bin"
+}
+
+vim.env.PATH = table.concat(paths, ":") .. ":" .. vim.env.PATH
+
 -- ============================================================================
 -- Neovim Global Options Core Configuration
 -- ============================================================================
