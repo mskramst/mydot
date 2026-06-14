@@ -1,8 +1,3 @@
--- If we are running inside WSL, completely skip outputting this engine block
-{{ if .is_wsl -}}
--- WSL Instance: WezTerm configurations are handled by the Windows host.
-{{ else -}}
--- Linux/macOS Native Instance
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
@@ -14,10 +9,16 @@ config.color_scheme = 'Guezwhoz'
 config.audible_bell = "Disabled"
 config.harfbuzz_features = { 'calt=0' }
 
--- Dynamic Profile Injection via Chezmoi Local Data Blocks
+-- Profile Injection (Fonts are overridden dynamically via Chezmoi)
 config.font = wezterm.font 'JetBrains Mono'
-config.font_size = {{ .wezterm_font_size }}
 
--- Finally, return the verified configuration mapping payload
-return config
+{{ if .is_wsl -}}
+-- WSL Specific Scaling overrides (Letting Windows host manage window specifics)
+config.font_size = 10.0
+{{ else -}}
+-- Native Linux/macOS Display Scale
+config.font_size = {{ .wezterm_font_size }}
 {{ end -}}
+
+-- Finally, return the verified configuration mapping payload cleanly on all platforms
+return config
