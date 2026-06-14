@@ -13,17 +13,6 @@ else
   alias ls='ls -G'
 fi
 
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-
-if [ -f "$HOME/.zshrc_ext" ]; then
-    . "$HOME/.zshrc_ext"
-fi
-
-case $- in
-    *i*) ;;
-    *) return;;
-esac
-
 {{ else if eq .chezmoi.os "linux" }}
 # -------------------------------------------------------------
 # Linux/GNU Specific Configuration
