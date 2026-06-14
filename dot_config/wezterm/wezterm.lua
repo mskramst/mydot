@@ -8,17 +8,31 @@ config.window_close_confirmation = "NeverPrompt"
 config.color_scheme = 'Guezwhoz'
 config.audible_bell = "Disabled"
 config.harfbuzz_features = { 'calt=0' }
-
--- Profile Injection (Fonts are overridden dynamically via Chezmoi)
 config.font = wezterm.font 'JetBrains Mono'
 
-{{ if .is_wsl -}}
--- WSL Specific Scaling overrides (Letting Windows host manage window specifics)
-config.font_size = 10.0
-{{ else -}}
--- Native Linux/macOS Display Scale
-config.font_size = {{ .wezterm_font_size }}
-{{ end -}}
+-- -------------------------------------------------------------
+-- Dynamic Environment Detection (Pure Lua)
+-- -------------------------------------------------------------
+local function is_wsl()
+  -- Check if the Linux kernel release contains the word "Microsoft"
+  local f = io.open("/proc/version", "r")
+  if f then
+    local content = f:read("*all")
+    f:close()
+    if string.find(string.lower(content), "microsoft") then
+      return true
+    end
+  end
+  return false
+end
 
--- Finally, return the verified configuration mapping payload cleanly on all platforms
+-- Set font size depending on the hosting layout
+if is_wsl() then
+  config.font_size = 10.0
+else
+  -- Fallback size for native Linux VMs or Mac environments
+  config.font_size = 13.0
+end
+
+-- Finally, return the verified configuration mapping payload cleanly
 return config
