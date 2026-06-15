@@ -1,8 +1,18 @@
 return {
   'tpope/vim-fugitive',
-  { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
   {'folke/tokyonight.nvim'},
   { "Mofiqul/vscode.nvim", priority = 1000 },
+	{
+    'ellisonleao/gruvbox.nvim',
+    priority = 1000, -- Load this early if you want it as your primary theme
+    config = function()
+      -- This setup function replaces your need to configure it elsewhere
+      require("gruvbox").setup({
+        contrast = "hard", -- Options: "soft", "medium", "hard"
+        inverse = true,    -- Keeps visual selections and search highlights crisp
+      })
+    end
+  },
   {'neovim/nvim-lspconfig'},
   {'hrsh7th/cmp-nvim-lsp'},
   {'hrsh7th/nvim-cmp'},

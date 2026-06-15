@@ -1,4 +1,3 @@
----- ---------------------------------------------------------------------------
 -- Environment Path Insurance Block (Fixes 'go is not executable')
 -- ---------------------------------------------------------------------------
 local home = os.getenv("HOME")
@@ -11,7 +10,15 @@ local paths = {
   "/bin"
 }
 
-vim.env.PATH = table.concat(paths, ":") .. ":" .. vim.env.PATH
+-- Combine our custom paths with a colon delimiter
+local custom_path_string = table.concat(paths, ":")
+
+-- Combine them cleanly with the existing system PATH without an extra trailing colon
+if vim.env.PATH and vim.env.PATH ~= "" then
+    vim.env.PATH = custom_path_string .. ":" .. vim.env.PATH
+else
+    vim.env.PATH = custom_path_string
+end
 
 -- ============================================================================
 -- Neovim Global Options Core Configuration
@@ -67,7 +74,6 @@ vim.opt.formatoptions:append("tcrqn")
 -- {{ Module Integration Core Routes }}
 -- ============================================================================
 require("config.lazy")         -- Loads package layouts
-require("user.colorschemes")   -- Pulls colorschemes
 require("user.mappings")       -- Bootstraps personal action shortcuts
 require("lsp")                 -- Modern 0.11+ Native Language Processing Core
 require("user.abbreviations")
@@ -143,3 +149,5 @@ vim.api.nvim_create_autocmd("InsertLeave", {
     end,
     desc = "Automatically turn off Caps Lock on InsertLeave",
 })
+
+require("user.colorschemes")
