@@ -25,12 +25,22 @@ for tool in "${go_tools[@]}"; do
 done
 
 # ------------------------------- colors -------------------------------
+# Initialize the variable as empty by default
+winidx=""
 
-[ -n "${TMUX}" ] && winidx=$(tmux display-message -p '#I')
-
-if (( winidx <0)); then
-  winidx=""
+# Only query tmux if the TMUX environment variable actually exists
+if [[ -n "$TMUX" ]]; then
+  winidx=$(tmux display-message -p '#I')
 fi
+
+# (Optional) If you want to format it to display inside your prompt string:
+# For example, if winidx is 1, this turns it into "[1] "
+if [[ -n "$winidx" ]]; then
+  TMUX_PROMPT_PREFIX="[$winidx] "
+else
+  TMUX_PROMPT_PREFIX=""
+fi
+[ -n "${TMUX}" ] && winidx=$(tmux display-message -p '#I')
 
 # ----------------------------- Atuin Up-Arrow Binding -----------------------
 if command -v atuin &> /dev/null; then

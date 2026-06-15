@@ -63,8 +63,11 @@ alias gitp="git push origin main && echo 'pushing main to origin'"
 alias tlw="tmux list-windows"
 alias tls="tmux ls"
 alias tnew="tmux new -s"
+alias win="tmux display-message -p '#W'"
+alias srcall='current_pane=$(tmux display-message -p "#D"); tmux list-panes -a -F "#D" | grep -v "$current_pane" | xargs -I {} tmux send-keys -t {} "source ~/.zshrc" C-m; source ~/.zshrc'
 alias attach="tmux a -t"
 alias tkill="tmux kill-server"
+alias tsrc="tmux source-file ~/.config/tmux/tmux.conf"
 
 #useful
 alias ytmp3="yt-dlp -x --audio-format mp3" # mp3

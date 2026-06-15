@@ -21,31 +21,31 @@ set cursorline
 " --- Performance & UI ---
 set lazyredraw               " Don't redraw screen during macros (speed boost)
 set signcolumn=yes           " Prevents the screen 'jumping' when ALE markers appear
-set showmatch                     "Convenient for showing the matching braces"
+set showmatch                " Convenient for showing the matching braces"
 
-set wildmenu                      "Creates a wild menu for toggling between files
-set colorcolumn=80                "Create a clear 80 char limit for coding"
-set nu                            "Hide/Display line numbers"
-"set relativenumber              "Hide/Show line numbers and relative value
-                                  "  for easy navigation"
-set smartcase                     "Helps with searching text set noswapfile
-set history=10000                 "Creates a history of vim commands to search
-set undodir=~/.vim/undodir        "Stores undohistory in undodirectory for
-                                  "  edited files for future sessions"
-set undofile                      "Turns on saving of undo/redo history"
-set viminfo='20,<1000,s1000       "Prevents truncating yanks, deletes
-set noerrorbells                  "Turn off sound when errors made"
+set wildmenu                 "Creates a wild menu for toggling between files
+set colorcolumn=80           "Create a clear 80 char limit for coding"
+set nu                       "Hide/Display line numbers"
+"set relativenumber          "Hide/Show line numbers and relative value
+                             "  for easy navigation"
+set smartcase                "Helps with searching text set noswapfile
+set history=10000            "Creates a history of vim commands to search
+set undodir=~/.vim/undodir   "Stores undohistory in undodirectory for
+                             "  edited files for future sessions"
+set undofile                 "Turns on saving of undo/redo history"
+set viminfo='20,<1000,s1000  "Prevents truncating yanks, deletes
+set noerrorbells             "Turn off sound when errors made"
 set belloff=all
-set textwidth=80                  "Set default settings for tabs, width, indent"
-set tabstop=2                     "All tabbing set to 2
+set textwidth=80             "Set default settings for tabs, width, indent"
+set tabstop=2                "All tabbing set to 2
 set softtabstop=2
 set shiftwidth=2
 set ruler
 set wrapscan
 set noswapfile
 set nowritebackup
-set mouse=a                       "Allows for mouse scrolling
-set re=0                          "Fixes slow TS highlighting
+set mouse=a                  "Allows for mouse scrolling
+set re=0                     "Fixes slow TS highlighting
 
 " --- Fix the FZF logic ---
 if executable('rg')
