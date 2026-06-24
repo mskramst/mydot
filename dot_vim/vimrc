@@ -208,3 +208,5 @@ map <C-l> <C-w>l
 "Disable caps lock after leaving insert mode 
 au InsertLeave * call TurnOffCaps()
 
+" Run whisper-stream in a live, real-time terminal split window
+nnoremap <leader>w :new +term\ /home/mskramst/repos/github.com/mskramst/whisper.cpp/build/bin/whisper-stream\ -m\ /home/mskramst/repos/github.com/mskramst/whisper.cpp/models/ggml-base.en.bin\ -t\ 4\ --step\ 3000\ --length\ 10000<CR>

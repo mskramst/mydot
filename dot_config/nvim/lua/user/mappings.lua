@@ -254,3 +254,4 @@ vim.keymap.set('n', '<leader>sc', function()
         cwd = scripts_path,
     })
 end, { desc = "Fuzzy find and edit automation scripts" })
+

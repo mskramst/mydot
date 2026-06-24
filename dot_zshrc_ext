@@ -17,6 +17,7 @@ local -a go_tools=(
     secure 
     reveal 
     siph
+    secure-vault
 )
 
 # Dynamically generate wrapper FUNCTIONS so Vim can read them
