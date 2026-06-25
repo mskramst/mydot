@@ -1,0 +1,10 @@
+vault() {
+    local output rc
+    output="$(run_go_tool secure-vault load)"
+    rc=$?
+    if (( rc != 0 )); then
+        return "$rc"
+    fi
+
+    eval "$output"
+}
