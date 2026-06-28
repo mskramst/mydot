@@ -13,6 +13,7 @@ alias bash='exec bash -l'     # reload bash
 alias info="sed -n '2p'"
 alias cz="chezmoi"
 alias czpush="chezmoi cd && chezmoi add -A . && chezmoi commit -m 'update dotfiles'"
+alias pushtags="git push origin --tags"
 alias nv='nvim'
 alias grep='grep --color=auto'
 # setup for syncing dot files to and from multiple computers
