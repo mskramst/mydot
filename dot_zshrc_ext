@@ -4,27 +4,6 @@ if [ -f "$HOME/.aliases" ]; then
    source "$HOME/.aliases"
 fi
 
-# Detect OS once at shell startup
-export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
-ARCH_TYPE=$(uname -m | sed 's/x86_64/amd64/') 
-
-# Helper function to run the correct binary
-
-local -a go_tools=(
-    snip 
-    gp 
-    32bits 
-    secure 
-    reveal 
-    siph
-    secure-vault
-    projinit
-)
-
-# Dynamically generate wrapper FUNCTIONS so Vim can read them
-for tool in "${go_tools[@]}"; do
-    eval "${tool}() { run_go_tool \"${tool}\" \"\$@\"; }"
-done
 
 # ------------------------------- colors -------------------------------
 # Initialize the variable as empty by default
@@ -126,6 +105,12 @@ dirs=("dev" "coding" "gpt" "js" "java" "")
 for dir in "${dirs[@]}"; do
     export PATH=$PATH:$base_path/$dir
 done
+
+GO_TOOL_BIN="$STARTANEW/scripts/.bin"
+
+if [ -d "$GO_TOOL_BIN" ] && [[ ":$PATH:" != *":$GO_TOOL_BIN:"* ]]; then
+    export PATH="$GO_TOOL_BIN:$PATH"
+fi
 
 # -------------------------- color man pages -------------------------
 # Using the more comprehensive set from bashrc_ext, which should work in ZSH too
