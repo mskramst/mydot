@@ -33,6 +33,7 @@ alias srcb="source ~/.bashrc"
 alias start='cd $STARTANEW'
 alias scripts='cd $SCRIPTS'
 alias snippets='cd $SNIPPETS'
+alias got='cd $STARTANEW/gotools'
 alias gith='cd $GHREPOS'
 alias gitrv='git remote -v'
 alias saved='cd $STARTANEW/saved'
