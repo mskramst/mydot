@@ -32,6 +32,14 @@ if command -v atuin &> /dev/null; then
     bindkey '^[[A' atuin-up-search
     bindkey '^[OA' atuin-up-search
 fi
+
+# ------------------------ NVM and Node setup ------------------------
+
+export NVM_DIR="$HOME/.nvm"
+
+[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+
 # -------------------------- Loads functions -------------------------
 
 # 1. Define the functions directory

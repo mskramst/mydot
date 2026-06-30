@@ -29,7 +29,7 @@ vim.g.mapleader = " "
 -- --- UI Options ---
 vim.opt.number = true
 vim.opt.relativenumber = false
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 vim.opt.signcolumn = "yes"
 vim.opt.colorcolumn = "80"
 vim.opt.ruler = true
