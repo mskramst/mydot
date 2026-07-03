@@ -1,20 +1,4 @@
-{{ if eq .chezmoi.os "darwin" }}
-# -------------------------------------------------------------
-# MacOS Specific Configuration
-# -------------------------------------------------------------
-export PATH="/opt/homebrew/bin:$HOME/.local/bin:$HOME/.atuin/bin:$HOME/go/bin:$PATH"
 
-if command -v gdircolors &> /dev/null; then
-  test -r "$HOME/.dircolors" && eval "$(gdircolors -b "$HOME/.dircolors")"
-fi
-
-if command -v gls &> /dev/null; then
-  alias ls='gls --color=auto'
-else
-  alias ls='ls -G'
-fi
-
-{{ else if eq .chezmoi.os "linux" }}
 # -------------------------------------------------------------
 # Linux/GNU Specific Configuration
 # -------------------------------------------------------------
@@ -23,13 +7,11 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:$HOME/.loc
 test -r "$HOME/.dircolors" && eval "$(dircolors -b "$HOME/.dircolors")"
 alias ls='ls --color=auto'
 
-{{ if lstat "/proc/sys/fs/binfmt_misc/WSLInterop" }}
+
 # -------------------------------------------------------------
 # WSL Specific Configuration
 # -------------------------------------------------------------
 export BROWSER="wslview"
-{{ end }}
-{{ end }}
 
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
@@ -41,3 +23,4 @@ case $- in
     *i*) ;;
     *) return;;
 esac
+

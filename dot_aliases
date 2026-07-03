@@ -48,7 +48,7 @@ alias cloneins='git clone -c http.sslVerify=false'
 # gist related
 alias gistc='gh gist create -'
 alias gistls='gh gist list'
-alias gisthelp='cat $STARTANEW/docs/gists-help.txt'
+alias gisthelp='glow $STARTANEW/docs/gists-help.md'
 
 # editing config files
 alias hl='highlight -O ansi'
@@ -72,10 +72,9 @@ alias tkill="tmux kill-server"
 alias tsrc="tmux source-file ~/.config/tmux/tmux.conf"
 
 #useful
-alias ytmp3="yt-dlp -x --audio-format mp3" # mp3
-alias yt="ytfzf -L"
-alias ytlist="mpv --geometry 480x360 --playlist=current"
-alias ytget='yt-dlp'
+alias ytmp3="noglob yt-dlp -x --audio-format mp3"
+alias ytget="no globyt-dlp"
+alias ytg='noglob ytt'
 alias entrgo='ls *.go | entr -r go run main.go'
 
 #ai

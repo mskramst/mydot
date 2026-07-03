@@ -4,6 +4,26 @@ if [ -f "$HOME/.aliases" ]; then
    source "$HOME/.aliases"
 fi
 
+# ------------------------------- os -------------------------------
+
+# Detect OS Type (linux, darwin, etc.)
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    export OS_TYPE="linux"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    export OS_TYPE="darwin"
+else
+    export OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
+fi
+
+# Detect Architecture Type (amd64, arm64, etc.)
+local arch=$(uname -m)
+if [[ "$arch" == "x86_64" ]]; then
+    export ARCH_TYPE="amd64"
+elif [[ "$arch" == "aarch64" || "$arch" == "arm64" ]]; then
+    export ARCH_TYPE="arm64"
+else
+    export ARCH_TYPE="$arch"
+fi
 
 # ------------------------------- colors -------------------------------
 # Initialize the variable as empty by default
