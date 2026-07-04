@@ -95,9 +95,8 @@ precmd() {
 # Enable parameter substitution in the prompt
 setopt prompt_subst
 
-# A clean two-line prompt
 PROMPT='
-%B%1~/%b ${vcs_info_msg_0_}%f
+%1~/%b ${vcs_info_msg_0_}%f
 $winidx %B%(!.#.)%b --> '
 
 # ------------------------ environmental variables -------------------------------
