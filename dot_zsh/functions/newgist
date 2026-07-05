@@ -1,0 +1,45 @@
+newgist() {
+    local today=$(date +"%Y%m%d%H%M%S")
+    local file=""
+    local desc=""
+    
+    # Smart Argument Parsing
+    if [ -z "$1" ]; then
+        # Case 1: Zero arguments passed
+        file="snippet.txt"
+        desc="Quick snippet created on $(date +'%B %d, %Y')"
+    elif [ -z "$2" ]; then
+        # Case 2: Exactly ONE argument passed
+        if [[ "$1" == *.* ]]; then
+            # It's a filename (e.g., sumNums.js)
+            file="$1"
+            # Dynamically extract the extension to make a smart description
+            local ext="${1##*.}"
+            desc="Code snippet for $file (${ext^^} source file)"
+        else
+            # It's a description/label (e.g., "vim snippet")
+            file="snippet.txt"
+            desc="$1"
+        fi
+    else
+        # Case 3: Both arguments provided explicitly
+        file="$1"
+        desc="$2"
+    fi
+
+    local gist_dir="$STARTANEW/saved/gists/$today"
+    local data=$(cat)
+    
+    # Save locally
+    mkdir -p "$gist_dir"
+    echo "${data}" > "$gist_dir/$file"
+    
+    # Create the Gist on GitHub (Description flag first)
+    local url=$(gh gist create -d "$desc" "$gist_dir/$file")
+    
+    # Log the creation
+    echo "$today ($file): $url" >> "$STARTANEW"/saved/gists/gist-info
+    
+    # Return data to Vim/terminal stdout
+    echo "${data}"
+}

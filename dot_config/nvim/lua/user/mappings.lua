@@ -5,6 +5,9 @@
 -- Fast Escape configuration in Insert Mode
 vim.keymap.set('i', 'jk', '<Esc>')
 
+vim.keymap.set("n", "<leader>cw", ":.!codewrite<CR>", { desc = "Expand codewrite snippet" })
+vim.keymap.set("v", "<leader>cw", ":!codewrite<CR>", { desc = "Expand codewrite selection" })
+
 -- Configuration Reloads & File System Access Hooks
 -- Force-reload the entire configuration ecosystem on the fly
 vim.keymap.set('n', '<leader>so', function()

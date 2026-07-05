@@ -1,0 +1,26 @@
+# Description: Open specific markdown files in the current directory by filename.
+# Usage: mdview filename (adds .md automatically) or mdview filename.md
+
+local input="$1"
+
+if [ -z "$input" ]; then
+    echo "Error: Please provide a filename."
+    return 1
+fi
+
+local file_path=""
+
+# If the input doesn't already have an .md extension, append it locally
+if [[ "$input" != *.md && "$input" != *.MD ]]; then
+    file_path="./${input}.md"
+else
+    file_path="./${input}"
+fi
+
+# Double check if the file actually exists before running glow
+if [[ -f "$file_path" ]]; then
+    glow "$file_path"
+else
+    echo "❌ Error: File not found at $file_path"
+    return 1
+fi

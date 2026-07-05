@@ -1,0 +1,47 @@
+# Ensure zsh-specific options are handled gracefully
+emulate -L zsh
+setopt localoptions noglob no_nomatch
+
+# Print usage instructions if no arguments are given
+if [ -z "$1" ]; then
+    echo "Usage:"
+    echo "  ytg <URL or ID>          - Downloads best quality video (MP4)"
+    echo "  ytg -a <URL or ID>       - Extracts best quality audio (MP3)"
+    echo "  ytg --audio <URL or ID>  - Extracts best quality audio (MP3)"
+    return 1
+fi
+
+# Default mode is video
+local MODE="video"
+local INPUT=""
+local URL=""
+
+# Parse flags
+while (( $# > 0 )); do
+    case "$1" in
+        -a|--audio)
+            MODE="audio"
+            shift
+            ;;
+        *)
+            INPUT="$1"
+            shift
+            ;;
+    esac
+done
+
+# If the input is just an 11-character string (YouTube ID), turn it into a full URL
+if [[ ${#INPUT} -eq 11 && ! "$INPUT" =~ "://" ]]; then
+    URL="https://www.youtube.com/watch?v=${INPUT}"
+else
+    URL="$INPUT"
+fi
+
+# Execute yt-dlp based on the chosen mode
+if [ "$MODE" = "audio" ]; then
+    echo "🎵 Downloading audio from: $URL"
+    yt-dlp -x --audio-format mp3 --audio-quality 0 "$URL"
+else
+    echo "🎬 Downloading video from: $URL"
+    yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]" --merge-output-format mp4 "$URL"
+fi

@@ -1,0 +1,27 @@
+searchgists() {
+    if [ ! -f "$STARTANEW/saved/gists/gist-info" ]; then
+        echo "No gists logged yet!"
+        return 1
+    fi
+
+    local choice=$(cat "$STARTANEW/saved/gists/gist-info" | fzf \
+        --prompt="Search Gists > " \
+        --header="Press ENTER to open in Vim")
+    
+    # Extract the timestamp
+    local timestamp=$(echo "$choice" | awk '{print $1}')
+    
+    if [ -n "$timestamp" ]; then
+        local target="$STARTANEW/saved/gists/$timestamp"
+        
+        # Check if it's a directory (New Setup)
+        if [ -d "$target" ]; then
+            vim "$target/"*
+        # Check if it's a flat file (Your Past Setup)
+        elif [ -f "$target" ]; then
+            vim "$target"
+        else
+            echo "Error: Local file or directory for $timestamp not found."
+        fi
+    fi
+}
