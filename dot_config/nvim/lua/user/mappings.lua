@@ -7,6 +7,13 @@ vim.keymap.set('i', 'jk', '<Esc>')
 
 vim.keymap.set("n", "<leader>cw", ":.!codewrite<CR>", { desc = "Expand codewrite snippet" })
 vim.keymap.set("v", "<leader>cw", ":!codewrite<CR>", { desc = "Expand codewrite selection" })
+  vim.keymap.set("v", "<leader>cp", ":CodewriteGenerate<CR>", {
+    desc = "Codewrite prompt selection",
+  })
+
+  vim.keymap.set("n", "<leader>cp", "<cmd>CodewriteGenerate<CR>", {
+    desc = "Codewrite prompt current line",
+  })
 
 -- Configuration Reloads & File System Access Hooks
 -- Force-reload the entire configuration ecosystem on the fly

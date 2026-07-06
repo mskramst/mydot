@@ -21,6 +21,11 @@ return {
   "nvim-telescope/telescope.nvim",
   dependencies = { "nvim-lua/plenary.nvim" }
 },
+  {
+    dir = "/home/mskramst/repos/github.com/mskramst/codewrite",
+    lazy = false,
+    priority = 1000,
+  },
 {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",

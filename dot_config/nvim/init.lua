@@ -90,6 +90,8 @@ local source_if_readable = function(path)
     end
 end
 
+vim.opt.runtimepath:append("/home/mskramst/repos/github.com/mskramst/codewrite")
+
 -- Centralized Autocommand Event Handlers
 local augroup = vim.api.nvim_create_augroup("UserConfigGroup", { clear = true })
 
