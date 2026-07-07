@@ -1,4 +1,4 @@
-advclone() {
+clone() {
   # Declare local variables
   local repo="$1"
   local user=""
