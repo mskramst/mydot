@@ -1,3 +1,4 @@
+#
 # Creates a new Go project with standard cmd/ layout
 gonew() {
     if [ -z "$1" ]; then

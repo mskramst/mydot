@@ -1,3 +1,4 @@
+#
 # Description: Open specific markdown files in the current directory by filename.
 # Usage: mdview filename (adds .md automatically) or mdview filename.md
 

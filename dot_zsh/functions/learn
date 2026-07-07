@@ -1,3 +1,5 @@
+
+# Changes into learn2code learn directory
 learn() {
     if [ -z "$1" ]; then
         echo "Error: Please select a language."

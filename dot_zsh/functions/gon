@@ -1,3 +1,5 @@
+
+# Creates a new go project
 gon() {
     if [ -z "$1" ]; then
         echo "Usage: gonew <project_name>"

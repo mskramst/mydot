@@ -1,3 +1,5 @@
+
+# Shuffle and play song list of youtube ids
 play () {
     local vault="${1:?Usage: playvault <encrypted-playlist>}"
     local decrypted_list

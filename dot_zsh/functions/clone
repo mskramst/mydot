@@ -1,4 +1,5 @@
 clone() {
+# clones directory into GHREPOS and changes directory into it.
   # Declare local variables
   local repo="$1"
   local user=""
