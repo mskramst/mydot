@@ -75,7 +75,6 @@ alias tsrc="tmux source-file ~/.config/tmux/tmux.conf"
 #useful
 alias ytmp3="noglob yt-dlp -x --audio-format mp3"
 alias ytget="no globyt-dlp"
-alias ytg='noglob ytt'
 alias entrgo='ls *.go | entr -r go run main.go'
 
 #ai

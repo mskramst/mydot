@@ -4,6 +4,7 @@ if [ -f "$HOME/.aliases" ]; then
    source "$HOME/.aliases"
 fi
 
+source ~/.zsh/functions/functions
 # ------------------------------- os -------------------------------
 
 # Detect OS Type (linux, darwin, etc.)
