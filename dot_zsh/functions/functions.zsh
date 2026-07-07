@@ -1,0 +1,349 @@
+# Combined zsh functions for chezmoi tracking.
+# Source this file from .zshrc instead of relying on per-function autoload files.
+
+advclone() {
+  # Declare local variables
+  local repo="$1"
+  local user=""
+  local name=""
+  local userd=""
+  local newpath=""
+
+  # Return early if no argument provided
+  if [ -z "$repo" ]; then
+    echo "Error: No repository specified."
+    return 1
+  fi
+
+  # 1. Standardize the input string by stripping prefixes and suffixes
+  repo="${repo#https://github.com/}"
+  repo="${repo#git@github.com:}"
+  repo="${repo%.git}" # Strip trailing .git if present
+
+  # 2. Determine the owner (User or Org) and the repo Name
+  if printf '%s' "$repo" | grep -q '/'; then
+    user="${repo%%/*}"
+    name="${repo##*/}"
+  else
+    # Fallback to env variables if only a repo name was passed
+    user="${GITUSER:-$USER}"
+    name="$repo"
+  fi
+
+  # Define paths based on the discovered owner namespace
+  userd="$REPOS/github.com/$user"
+  newpath="$userd/$name"
+
+  # Check if directory already exists
+  if [ -d "$newpath" ]; then
+    echo "Directory '$newpath' already exists. Changing into it."
+    cd "$newpath" || { echo "Error: Could not change directory to '$newpath'."; return 1; }
+    return 0
+  fi
+
+  # Create owner directory structure
+  mkdir -p "$userd" || { echo "Error: Could not create directory '$userd'."; return 1; }
+  cd "$userd" || { echo "Error: Could not change directory to '$userd'."; return 1; }
+
+  echo "Cloning gh repo clone $user/$name -- --recurse-submodules into $userd"
+
+  # Explicitly targeting the full owner/name layout ensures gh handles orgs perfectly
+  gh repo clone "$user/$name" -- --recurse-submodules || {
+    echo "Error: Failed to clone repository '$user/$name'."
+    return 1
+  }
+
+  # Change into the newly cloned directory
+  cd "$name" || { echo "Error: Could not change directory to '$name' after cloning."; return 1; }
+  echo "Successfully cloned and changed into '$newpath'."
+  return 0
+}
+
+clone() {
+# clones directory into GHREPOS and changes directory into it.
+  # Declare local variables
+  local repo="$1"
+  local user=""
+  local name=""
+  local userd=""
+  local newpath=""
+
+  # Return early if no argument provided
+  if [ -z "$repo" ]; then
+    echo "Error: No repository specified."
+    return 1
+  fi
+
+  # 1. Standardize the input string by stripping prefixes and suffixes
+  repo="${repo#https://github.com/}"
+  repo="${repo#git@github.com:}"
+  repo="${repo%.git}" # Strip trailing .git if present
+
+  # 2. Determine the owner (User or Org) and the repo Name
+  if printf '%s' "$repo" | grep -q '/'; then
+    user="${repo%%/*}"
+    name="${repo##*/}"
+  else
+    # Fallback to env variables if only a repo name was passed
+    user="${GITUSER:-$USER}"
+    name="$repo"
+  fi
+
+  # Define paths based on the discovered owner namespace
+  userd="$REPOS/github.com/$user"
+  newpath="$userd/$name"
+
+  # Check if directory already exists
+  if [ -d "$newpath" ]; then
+    echo "Directory '$newpath' already exists. Changing into it."
+    cd "$newpath" || { echo "Error: Could not change directory to '$newpath'."; return 1; }
+    return 0
+  fi
+
+  # Create owner directory structure
+  mkdir -p "$userd" || { echo "Error: Could not create directory '$userd'."; return 1; }
+  cd "$userd" || { echo "Error: Could not change directory to '$userd'."; return 1; }
+
+  echo "Cloning gh repo clone $user/$name -- --recurse-submodules into $userd"
+
+  # Explicitly targeting the full owner/name layout ensures gh handles orgs perfectly
+  gh repo clone "$user/$name" -- --recurse-submodules || {
+    echo "Error: Failed to clone repository '$user/$name'."
+    return 1
+  }
+
+  # Change into the newly cloned directory
+  cd "$name" || { echo "Error: Could not change directory to '$name' after cloning."; return 1; }
+  echo "Successfully cloned and changed into '$newpath'."
+  return 0
+}
+
+duck(){ w3m "https://lite.duckduckgo.com/lite/?q=$*" }
+
+gccd()  {
+  git clone "$1" && cd "$(basename "$1".git)" || exit;
+}
+
+getip() {
+  ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '127.0.0.1'
+}
+
+gocmd() {
+    if [ -z "$1" ]; then
+        echo "Usage: gocmd <cmd_name>"
+        return 1
+    fi
+    local CMD_NAME=$1
+    mkdir -p "cmd/$CMD_NAME"
+    cat <<EOF > "cmd/$CMD_NAME/main.go"
+package main
+import "fmt"
+func main() {
+    fmt.Println("Experiment $CMD_NAME is running...")
+}
+EOF
+    go fmt "cmd/$CMD_NAME/main.go"
+    vim "cmd/$CMD_NAME/main.go"
+}
+
+gon() {
+    if [ -z "$1" ]; then
+        echo "Usage: gonew <project_name>"
+        return 1
+    fi
+
+    local PROJECT_NAME=$1
+    mkdir -p "$PROJECT_NAME" && cd "$PROJECT_NAME" || return
+
+    go mod init "github.com/mskramst/$PROJECT_NAME" # Using a more standard module path
+
+    cat <<EOF > main.go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Starting $PROJECT_NAME...")
+}
+EOF
+    go fmt main.go
+    vim main.go
+}
+
+gonew() {
+    if [ -z "$1" ]; then
+        echo "Usage: gonew <project_name>"
+        return 1
+    fi
+    local PROJECT_NAME=$1
+    # Create the main command directory
+    mkdir -p "$PROJECT_NAME/cmd/$PROJECT_NAME" && cd "$PROJECT_NAME" || return
+    go mod init "github.com/mskramst/$PROJECT_NAME"
+    cat <<EOF > "cmd/$PROJECT_NAME/main.go"
+package main
+import "fmt"
+func main() {
+    fmt.Println("Starting $PROJECT_NAME...")
+}
+EOF
+    go fmt "cmd/$PROJECT_NAME/main.go"
+    vim "cmd/$PROJECT_NAME/main.go"
+}
+
+google(){ w3m "https://www.google.com/search?q=$*" }
+
+goup() {
+  local num=${1:-1} # Default to 1 if no argument provided
+  for i in {1..$num}; do cd ..; done
+}
+
+hi() {
+	echo "Hi there!"
+}
+
+learn() {
+    if [ -z "$1" ]; then
+        echo "Error: Please select a language."
+        echo "Usage: learn <language>"
+        return 1
+    fi
+
+    local LANG_BASE="$GHREPOS/learn2code/$1"
+    local TARGET_DIR="$LANG_BASE/learn"
+
+    if [[ ! -d "$LANG_BASE" ]]; then
+        echo "❌ Base directory not found: $LANG_BASE"
+        echo "Please create the '$1' directory first."
+        return 1
+    fi
+
+    if [[ ! -d "$TARGET_DIR" ]]; then
+        echo "📁 'learn' directory missing. Creating: $TARGET_DIR"
+        mkdir -p "$TARGET_DIR"
+    fi
+
+    cd "$TARGET_DIR" || return 1
+    echo "🚀 Switched to $1 learning workspace!"
+}
+
+md() {
+    # Description: Open specific markdown files in the current directory by filename.
+    # Usage: md filename (adds .md automatically) or md filename.md
+
+    local input="$1"
+
+    if [ -z "$input" ]; then
+        echo "Error: Please provide a filename."
+        return 1
+    fi
+
+    local file_path=""
+
+    # If the input doesn't already have an .md extension, append it locally
+    if [[ "$input" != *.md && "$input" != *.MD ]]; then
+        file_path="./${input}.md"
+    else
+        file_path="./${input}"
+    fi
+
+    # Double check if the file actually exists before running glow
+    if [[ -f "$file_path" ]]; then
+        glow "$file_path"
+    else
+        echo "❌ Error: File not found at $file_path"
+        return 1
+    fi
+}
+
+mkcd() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: mkcd <directory>"
+  elif [[ -d "$1" ]]; then
+    cd "$1"
+  else
+    mkdir -p "$1" && cd "$1"
+  fi
+}
+
+play () {
+    local vault="${1:?Usage: playvault <encrypted-playlist>}"
+    local decrypted_list
+
+    if ! decrypted_list=$(siph -d < "$vault"); then
+        echo "Decryption failed or canceled."
+        return 1
+    fi
+
+    mpv \
+        --shuffle \
+        --vo=x11 \
+        --ao=pulse \
+        --playlist=<(echo "$decrypted_list" | sed 's|^|https://www.youtube.com/watch?v=|')
+}
+
+run_go_tool() {
+    local tool_name=$1
+    shift
+    local bin_path="$SCRIPTS/.bin/${tool_name}_${OS_TYPE}_${ARCH_TYPE}"
+
+    if [[ -f "$bin_path" ]]; then
+        "$bin_path" "$@"
+    else
+        echo "Error: Binary for $tool_name not found at $bin_path"
+        return 1
+    fi
+}
+
+vault() {
+    eval "$(secure-vault load)"
+}
+
+ytg() {
+    # Ensure zsh-specific options are handled gracefully
+    emulate -L zsh
+    setopt localoptions noglob no_nomatch
+
+    # Print usage instructions if no arguments are given
+    if [ -z "$1" ]; then
+        echo "Usage:"
+        echo "  ytg <URL or ID>          - Downloads best quality video (MP4)"
+        echo "  ytg -a <URL or ID>       - Extracts best quality audio (MP3)"
+        echo "  ytg --audio <URL or ID>  - Extracts best quality audio (MP3)"
+        return 1
+    fi
+
+    # Default mode is video
+    local MODE="video"
+    local INPUT=""
+    local URL=""
+
+    # Parse flags
+    while (( $# > 0 )); do
+        case "$1" in
+            -a|--audio)
+                MODE="audio"
+                shift
+                ;;
+            *)
+                INPUT="$1"
+                shift
+                ;;
+        esac
+    done
+
+    # If the input is just an 11-character string (YouTube ID), turn it into a full URL
+    if [[ ${#INPUT} -eq 11 && ! "$INPUT" =~ "://" ]]; then
+        URL="https://www.youtube.com/watch?v=${INPUT}"
+    else
+        URL="$INPUT"
+    fi
+
+    # Execute yt-dlp based on the chosen mode
+    if [ "$MODE" = "audio" ]; then
+        echo "🎵 Downloading audio from: $URL"
+        yt-dlp -x --audio-format mp3 --audio-quality 0 "$URL"
+    else
+        echo "🎬 Downloading video from: $URL"
+        yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]" --merge-output-format mp4 "$URL"
+    fi
+}
