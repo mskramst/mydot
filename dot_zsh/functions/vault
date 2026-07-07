@@ -1,5 +1,0 @@
-
-# Used to load secret and API keys into current environment
-vault() {
-    eval "$(secure-vault load)"
-}
