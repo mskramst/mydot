@@ -1,3 +1,4 @@
+#
 # Ensure zsh-specific options are handled gracefully
 emulate -L zsh
 setopt localoptions noglob no_nomatch
