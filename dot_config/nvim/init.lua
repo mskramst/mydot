@@ -92,6 +92,7 @@ end
 
 vim.opt.runtimepath:append("/home/mskramst/repos/github.com/mskramst/codewrite")
 
+
 -- Centralized Autocommand Event Handlers
 local augroup = vim.api.nvim_create_augroup("UserConfigGroup", { clear = true })
 
@@ -105,6 +106,11 @@ vim.api.nvim_create_autocmd("BufNewFile", {
     group = augroup,
     pattern = "main.py",
     command = "0r $STARTANEW/snippets/skele/main.py"
+})
+vim.api.nvim_create_autocmd("BufNewFile", {
+    group = augroup,
+    pattern = "main.go",
+    command = "0r $STARTANEW/snippets/skele/main.go"
 })
 
 -- Markdown Wrapping Enforcement

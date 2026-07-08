@@ -82,7 +82,7 @@ alias oll='ollama run llama3.2:latest'
 alias ol="ollama run llama3"
 
 # open the last modified file in a directory
-alias vlast="vim $STARTANEW/lastcmd"
+alias vlast="nvim $STARTANEW/last"
 
 # save last cli cmd to file
 alias savelast='atuin history last -f {command} > $STARTANEW/lastcmd'

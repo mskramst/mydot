@@ -26,6 +26,16 @@ return {
     lazy = false,
     priority = 1000,
   },
+    {
+    dir = vim.fn.expand("$STARTANEW/gotools/snip"),
+    name = "snip.nvim",
+    cmd = { "Snip", "SnipSearch", "SnipPick", "SnipExpand", "SnipNotes" },
+    keys = {
+      { "<leader>ss", "<cmd>SnipSearch<cr>", desc = "Search snip snippets" },
+      { "<leader>su", "<cmd>SnipExpand<cr>", desc = "Expand snip under cursor" },
+      { "<leader>sn", "<cmd>SnipNotes<cr>", desc = "Search snip notes" },
+    },
+  },
 {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
