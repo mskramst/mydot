@@ -3,6 +3,12 @@ local buf_map = function(bufnr, mode, lhs, rhs, opts)
     vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", { buffer = bufnr, silent = true }, opts or {}))
 end
 
+vim.diagnostic.config({
+    virtual_text = false,
+})
+
+vim.lsp.inlay_hint.enable(false)
+
 -- 2. Modern Centralized On-Attach Handler
 local on_attach = function(client, bufnr)
     -- Define user commands using the clean native Vim API
@@ -74,9 +80,65 @@ vim.lsp.enable('kotlin_language_server')
 -- ----------------------------------------------------------------------------
 
 -- Go Environment (Handled smoothly via ray-x/go.nvim plugin integration)
+
 require('go').setup({
     lsp_on_attach = on_attach,
+
+    lsp_inlay_hints = {
+        enable = false,
+    },
+
     lsp_cfg = {
         capabilities = capabilities,
-    }
+        settings = {
+            gopls = {
+                completeUnimported = true,
+                usePlaceholders = true,
+                staticcheck = true,
+                gofumpt = true,
+                analyses = {
+                    unusedparams = true,
+                    unreachable = true,
+                    unusedwrite = true,
+                },
+            },
+        },
+    },
+})
+
+vim.o.updatetime = 500
+
+vim.api.nvim_create_autocmd("CursorHold", {
+    callback = function()
+        vim.diagnostic.open_float(nil, {
+            focusable = false,
+            border = "rounded",
+            source = "always",
+        })
+    end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.go",
+    callback = function()
+        local params = vim.lsp.util.make_range_params(0, "utf-8")
+        params.context = { only = { "source.organizeImports" } }
+
+        local results = vim.lsp.buf_request_sync(
+            0,
+            "textDocument/codeAction",
+            params,
+            1000
+        )
+
+        for _, res in pairs(results or {}) do
+            for _, action in pairs(res.result or {}) do
+                if action.edit then
+                    vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+                end
+            end
+        end
+
+        vim.lsp.buf.format({ async = false })
+    end,
 })

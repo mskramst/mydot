@@ -347,3 +347,29 @@ ytg() {
         yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]" --merge-output-format mp4 "$URL"
     fi
 }
+
+gr() {
+    local cmds
+
+    cmds=(cmd/*(/))
+
+    case ${#cmds[@]} in
+        0)
+            echo "No cmd directories found."
+            return 1
+            ;;
+        1)
+            go run "./${cmds[1]}"
+            ;;
+        *)
+            if [[ -z "$1" ]]; then
+                echo "Available executables:"
+                for d in "${cmds[@]}"; do
+                    echo "  ${d#cmd/}"
+                done
+                return 1
+            fi
+            go run "./cmd/$1"
+            ;;
+    esac
+}

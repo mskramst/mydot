@@ -108,7 +108,7 @@ alias bat='batcat'
 alias podat='podman start -a'
 
 #java/kotlin
-alias gr='./gradlew'
+alias grad='./gradlew'
 alias grt='gradle test'
 alias grr='gradle run'
 alias gtasks='gradle tasks'
