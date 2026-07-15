@@ -20,6 +20,11 @@ else
     vim.env.PATH = custom_path_string
 end
 
+-- Set own undodir for Neovim
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("state") .. "/undo"
+vim.fn.mkdir(vim.fn.stdpath("state") .. "/undo", "p")
+
 -- ============================================================================
 -- Neovim Global Options Core Configuration
 -- ============================================================================

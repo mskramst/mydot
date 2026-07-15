@@ -143,6 +143,13 @@ if [ -d "$GO_TOOL_BIN" ] && [[ ":$PATH:" != *":$GO_TOOL_BIN:"* ]]; then
     export PATH="$GO_TOOL_BIN:$PATH"
 fi
 
+# >>> sdkman initialize >>>
+export SDKMAN_DIR="/home/mskramst/.sdkman"
+
+# Source the initialization script if it exists
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+# <<< sdkman initialize <<<
+
 # -------------------------- color man pages -------------------------
 # Using the more comprehensive set from bashrc_ext, which should work in ZSH too
 export LESS="-R"

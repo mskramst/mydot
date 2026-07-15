@@ -27,7 +27,8 @@ local on_attach = function(client, bufnr)
 
     -- Keybindings mapping directly using native vim.keymap.set
     buf_map(bufnr, "n", "gd", vim.lsp.buf.definition)
-    buf_map(bufnr, "n", "gr", vim.lsp.buf.rename)
+    buf_map(bufnr, "n", "rn", vim.lsp.buf.rename)
+    buf_map(bufnr, "n", "gr", vim.lsp.buf.references)
     buf_map(bufnr, "n", "gy", vim.lsp.buf.type_definition)
     buf_map(bufnr, "n", "K",  vim.lsp.buf.hover)
     buf_map(bufnr, "n", "[a", vim.diagnostic.goto_prev)

@@ -14,8 +14,37 @@ return {
     end
   },
   {'neovim/nvim-lspconfig'},
-  {'hrsh7th/cmp-nvim-lsp'},
-  {'hrsh7th/nvim-cmp'},
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = function()
+        require("nvim-autopairs").setup({})
+    end,
+},
+  {
+  "hrsh7th/nvim-cmp",
+  event = "InsertEnter",
+  dependencies = {
+    "hrsh7th/cmp-nvim-lsp",
+  },
+  config = function()
+    local cmp = require("cmp")
+
+    cmp.setup({
+      mapping = cmp.mapping.preset.insert({
+        ["<C-n>"] = cmp.mapping.select_next_item(),
+        ["<C-p>"] = cmp.mapping.select_prev_item(),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        ["<C-e>"] = cmp.mapping.abort(),
+        ["<C-Space>"] = cmp.mapping.complete(),
+      }),
+
+      sources = cmp.config.sources({
+        { name = "nvim_lsp" },
+      }),
+    })
+  end,
+},
   'ray-x/go.nvim',
 {
   "nvim-telescope/telescope.nvim",
