@@ -164,3 +164,44 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 })
 
 require("user.colorschemes")
+
+-- pastes without a space
+local function paste_dedent_two()
+    local lines = vim.fn.getreg("+", 1, true)
+
+    local can_dedent = true
+
+    for _, line in ipairs(lines) do
+      if line:match("%S") and not line:match("^  ") then
+        can_dedent = false
+        break
+      end
+    end
+
+    if can_dedent then
+      for index, line in ipairs(lines) do
+        lines[index] = line:gsub("^  ", "")
+      end
+    end
+
+    if vim.api.nvim_buf_line_count(0) == 1
+        and vim.api.nvim_get_current_line() == "" then
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    else
+      vim.api.nvim_put(lines, "l", true, true)
+    end
+  end
+
+  vim.api.nvim_create_user_command(
+    "PasteDedent2",
+    paste_dedent_two,
+    {}
+  )
+
+  vim.keymap.set(
+    "n",
+    "<leader>P",
+    paste_dedent_two,
+    { desc = "Paste clipboard without two-space padding" }
+  )
+

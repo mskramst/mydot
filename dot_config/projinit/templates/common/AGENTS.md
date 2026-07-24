@@ -29,6 +29,7 @@ Assume long-term maintainability is more important than cleverness.
 - Do not suggest Docker, Kubernetes, or PaaS unless explicitly requested.
 - Use Podman if containerization is necessary.
 - Use SQLite for local development and automated tests whenever practical.
+- Use Vim for interactive file editing; do not suggest Nano.
 
 ## Go
 

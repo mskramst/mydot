@@ -1,6 +1,7 @@
 # Skills
 
 - go-mentor — Teach idiomatic Go and explain tradeoffs.
+- php-mentor — Teach maintainable PHP web development through small, verifiable changes.
 - code-review — Review code using the project's engineering philosophy.
 - capture-context — Save and search durable STARTANEW project context.
 - create-skill-flow — Add or rename shared projinit-managed skills correctly.
