@@ -107,6 +107,22 @@ vim.keymap.set('n', '<leader>not', '<cmd>e $STARTANEW/software/vim.md<CR>', {
       end
     end, { desc = "Universal safe code format" })
 
+    -- Convert CRLF line endings and stray Ctrl-M characters to Unix LF.
+    vim.keymap.set('n', '<leader>fu', function()
+      local bufnr = vim.api.nvim_get_current_buf()
+      local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+      local cleaned_lines = {}
+
+      for index, line in ipairs(lines) do
+        cleaned_lines[index] = line:gsub("\r", "")
+      end
+
+      vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, cleaned_lines)
+      vim.bo[bufnr].fileformat = 'unix'
+
+      print("Converted current buffer to Unix LF line endings. Save with :w")
+    end, { desc = "Convert current buffer to Unix line endings" })
+
     vim.keymap.set('n', '<leader>th', function()
       -- Get the active colorscheme name from Neovim's internal global state
       local current_theme = vim.g.colors_name
@@ -264,4 +280,3 @@ vim.keymap.set('n', '<leader>sc', function()
         cwd = scripts_path,
     })
 end, { desc = "Fuzzy find and edit automation scripts" })
-
