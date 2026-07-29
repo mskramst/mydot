@@ -1,4 +1,13 @@
 return {
+  -- Emmet expands compact HTML/CSS abbreviations inside PHP templates.
+  {
+    "mattn/emmet-vim",
+    ft = { "html", "css", "php" },
+    init = function()
+      vim.g.user_emmet_leader_key = "<C-y>"
+    end,
+  },
+
   -- Mason manages external tools installed through :Mason.
   {
     "williamboman/mason.nvim",
