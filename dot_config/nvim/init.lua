@@ -95,9 +95,6 @@ local source_if_readable = function(path)
     end
 end
 
-vim.opt.runtimepath:append("/home/mskramst/repos/github.com/mskramst/codewrite")
-
-
 -- Centralized Autocommand Event Handlers
 local augroup = vim.api.nvim_create_augroup("UserConfigGroup", { clear = true })
 
@@ -165,22 +162,26 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 
 require("user.colorschemes")
 
--- pastes without a space
-local function paste_dedent_two()
+-- Paste from the system clipboard after removing indentation shared by every
+-- nonblank line. This removes padding introduced by rendered code blocks while
+-- preserving indentation inside the copied code.
+local function paste_dedent()
     local lines = vim.fn.getreg("+", 1, true)
 
-    local can_dedent = true
+    local common_indent
 
     for _, line in ipairs(lines) do
-      if line:match("%S") and not line:match("^  ") then
-        can_dedent = false
-        break
+      if line:match("%S") then
+        local indent = #(line:match("^[ \t]*") or "")
+        common_indent = math.min(common_indent or indent, indent)
       end
     end
 
-    if can_dedent then
+    if common_indent and common_indent > 0 then
       for index, line in ipairs(lines) do
-        lines[index] = line:gsub("^  ", "")
+        if line:match("%S") then
+          lines[index] = line:sub(common_indent + 1)
+        end
       end
     end
 
@@ -193,15 +194,14 @@ local function paste_dedent_two()
   end
 
   vim.api.nvim_create_user_command(
-    "PasteDedent2",
-    paste_dedent_two,
+    "PasteDedent",
+    paste_dedent,
     {}
   )
 
   vim.keymap.set(
     "n",
-    "<leader>P",
-    paste_dedent_two,
-    { desc = "Paste clipboard without two-space padding" }
+    "<leader>Y",
+    paste_dedent,
+    { desc = "Paste clipboard without common indentation" }
   )
-

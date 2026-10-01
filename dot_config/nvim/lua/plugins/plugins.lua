@@ -50,11 +50,12 @@ return {
   "nvim-telescope/telescope.nvim",
   dependencies = { "nvim-lua/plenary.nvim" }
 },
-  {
-    dir = "/home/mskramst/repos/github.com/mskramst/codewrite",
-    lazy = false,
-    priority = 1000,
-  },
+	{
+	    dir = vim.fn.expand("~/repos/github.com/mskramst/codewrite"),
+	    name = "codewrite",
+	    lazy = false,
+	    priority = 1000,
+	  },
     {
     dir = vim.fn.expand("$STARTANEW/gotools/snip"),
     name = "snip.nvim",
@@ -83,7 +84,6 @@ return {
   end,
 },
 }
-
 
 
 
